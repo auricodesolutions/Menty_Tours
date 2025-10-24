@@ -62,13 +62,14 @@
   border-color: transparent;
 }
 
-/* ===== Package Grid ===== */
+/* ===== Package Grid (desktop) ===== */
 .tp-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 2rem;
 }
 
+/* ===== Card ===== */
 .tp-card {
   background: #fff;
   border-radius: 18px;
@@ -77,6 +78,7 @@
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column;
+  position: relative;
 }
 
 .tp-card:hover {
@@ -175,6 +177,7 @@
 .tp-actions {
   display: flex;
   gap: 10px;
+  flex-wrap: wrap;
 }
 
 .tp-btn {
@@ -184,10 +187,11 @@
   font-size: 0.9rem;
   cursor: pointer;
   text-decoration: none;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: all 0.3s ease;
+  white-space: nowrap;
 }
 
 .tp-btn--ghost {
@@ -211,15 +215,99 @@
   opacity: 0.9;
 }
 
+/* XL button for CTA */
+.tp-btn--xl {
+  padding: 12px 22px;
+  font-weight: 700;
+}
+
+/* ===== Carousel (mobile) ===== */
+.tp-carousel {
+  position: relative;
+}
+
+.tp-hscroll {
+  display: flex;
+  gap: 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+  padding: 6px 4px 16px;
+}
+
+.tp-hscroll::-webkit-scrollbar { height: 8px; }
+.tp-hscroll::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,.15);
+  border-radius: 999px;
+}
+
+.tp-slide {
+  min-width: 82%;
+  scroll-snap-align: start;
+}
+
+.tp-nav {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 6px;
+}
+
+.tp-nav-btn {
+  pointer-events: auto;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,.12);
+  border-radius: 999px;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 10px 20px rgba(0,0,0,.08);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+
+.tp-nav-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px rgba(0,0,0,.12);
+}
+
+/* ===== Bottom CTA ===== */
+.tp-cta-all {
+  margin-top: 26px;
+  text-align: center;
+}
+
+/* ===== States ===== */
+.tp-error {
+  color: #b00020;
+  text-align: center;
+  margin-top: 10px;
+}
+.tp-empty {
+  color: #7a889e;
+  text-align: center;
+}
+
+/* ===== Skeletons (light) ===== */
+.tp-card--skeleton .skeleton-block{
+  background: #eef2f6;
+  height: 230px;
+}
+.skeleton-line{
+  height: 16px; background:#eef2f6; border-radius:10px; margin:10px 0;
+}
+.skeleton-line.short{ width: 120px; }
+.skeleton-btn{
+  display:inline-block; width:100px; height:36px; border-radius:30px; background:#eef2f6;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-  .tp-section {
-    padding: 70px 0;
-  }
-  .tp-title {
-    font-size: 1.8rem;
-  }
-  .tp-grid {
-    gap: 1.5rem;
-  }
+  .tp-section { padding: 70px 0; }
+  .tp-title { font-size: 1.8rem; }
+  .tp-grid { display: none; }       /* hide grid on mobile */
+  .tp-slide { min-width: 85%; }
 }

@@ -42,47 +42,35 @@
   margin-top: 8px;
   opacity: 0.9;
 }
-.hero-btn {
-  margin-top: 20px;
-  background: linear-gradient(90deg, #ffd86f, #fbbf24);
-  border: none;
-  border-radius: 999px;
-  color: #1a1a1a;
-  font-weight: 700;
-  padding: 12px 28px;
-  cursor: pointer;
-  transition: all 0.4s ease;
-  box-shadow: 0 10px 25px rgba(255, 184, 0, 0.3);
-}
-.hero-btn:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 32px rgba(255, 184, 0, 0.45);
-}
 
 /* ===== Overview ===== */
 .trip-intro {
   text-align: center;
   padding: 40px 8%;
   margin-bottom: 1px;
-
 }
 .trip-intro h2 {
   font-size: 2rem;
   font-weight: 800;
 }
-.trip-intro p {
-  max-width: 800px;
-  margin: 14px auto 5px;
+.trip-description {
+  max-width: 900px;
+  margin: 14px auto 12px;
   color: #444;
-  line-height: 1.7;
+  line-height: 1.8;
 }
 .trip-tags {
   display: flex;
   justify-content: center;
   gap: 10px;
   flex-wrap: wrap;
+  padding: 0;
+  list-style: none;
 }
 .trip-tags li {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: #eef4ff;
   padding: 8px 16px;
   border-radius: 999px;
@@ -120,6 +108,9 @@
   width: 40%;
   object-fit: cover;
 }
+.day-card.empty img {
+  display: none;
+}
 .day-content {
   padding: 20px;
 }
@@ -133,7 +124,7 @@
   margin-top: 6px;
 }
 
-/* ===== Gallery ===== */
+/* ===== Gallery (optional if you later add) ===== */
 .trip-gallery {
   padding: 60px 8%;
   text-align: center;
@@ -153,7 +144,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 
-/* ===== Inclusions ===== */
+/* ===== Inclusions (kept for future) ===== */
 .trip-includes {
   padding: 60px 8%;
   background: #ffffff;
@@ -172,6 +163,8 @@
 .includes-grid ul {
   list-style: none;
   line-height: 1.8;
+  padding: 0;
+  margin: 0;
 }
 .not-included li {
   color: #c0392b;
@@ -235,15 +228,36 @@
   transform: translateY(0);
 }
 
+/* ===== Skeletons / error ===== */
+.skeleton-hero {
+  height: 60vh;
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 37%, #ececec 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.6s infinite;
+}
+.skeleton-block {
+  margin: 30px 8%;
+  height: 180px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, #ececec 25%, #f5f5f5 37%, #ececec 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.6s infinite;
+}
+.skeleton-block.tall { height: 260px; }
+
+@keyframes shimmer {
+  0% { background-position: 100% 0; }
+  100% { background-position: 0 0; }
+}
+
+.trip-error {
+  padding: 80px 8%;
+  text-align: center;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
-  .trip-hero {
-    height: 50vh;
-  }
-  .day-card {
-    flex-direction: column;
-  }
-  .day-card img {
-    width: 100%;
-  }
+  .trip-hero { height: 50vh; }
+  .day-card { flex-direction: column; }
+  .day-card img { width: 100%; }
 }

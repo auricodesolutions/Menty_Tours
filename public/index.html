@@ -2,42 +2,148 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+
+    <!-- ========== FAVICONS / PWA ========== -->
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="%PUBLIC_URL%/apple-touch-icon.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <meta name="theme-color" content="#0b5f8a" />
+
+    <!-- ========== VIEWPORT ========== -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
+
+    <!-- ========== BASIC SEO ========== -->
+    <title>Menty Tours Sri Lanka | Best Tourism Packages & Top Places to Visit</title>
     <meta
       name="description"
-      content="Web site created using create-react-app"
+      content="Explore Sri Lanka with Menty Tours — trusted travel agency for tailor-made tourism packages, family holidays, private drivers, and airport pickup services. Visit Sigiriya, Kandy, Ella, Yala, Mirissa, and Galle."
     />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+    <meta
+      name="keywords"
+      content="Sri Lanka tourism places, best Sri Lanka tour packages, family tour packages Sri Lanka, airport pickup Sri Lanka, top 10 places to visit in Sri Lanka, beautiful places in Sri Lanka, tailor-made tours, private driver Sri Lanka, Sigiriya, Kandy, Ella train, Nuwara Eliya tea country, Yala Safari, Galle Fort, Mirissa beach, Wadduwa tours"
+    />
+    <meta name="author" content="Menty Tours Sri Lanka" />
+    <meta name="robots" content="index,follow" />
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
+    <!-- ========== CANONICAL ========== -->
+    <link rel="canonical" href="https://www.mentytours.com/" />
+
+    <!-- ========== OPEN GRAPH ========== -->
+    <meta property="og:site_name" content="Menty Tours Sri Lanka" />
+    <meta property="og:title" content="Menty Tours Sri Lanka | Authentic & Tailor-Made Tours" />
+    <meta
+      property="og:description"
+      content="Discover the best Sri Lanka tourist places — Sigiriya, Kandy, Ella, Yala, Mirissa & more. Tailor-made packages, private drivers, and family-friendly adventures with Menty Tours."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://www.mentytours.com/" />
+    <meta property="og:image" content="https://www.mentytours.com/og-cover.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="en_LK" />
+
+    <!-- ========== TWITTER CARD ========== -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Menty Tours Sri Lanka | Explore the Best Tourist Places" />
+    <meta
+      name="twitter:description"
+      content="Travel Sri Lanka your way — culture, wildlife, beaches & tea country. Book family tours, private drivers, and airport transfers with Menty Tours."
+    />
+    <meta name="twitter:image" content="https://www.mentytours.com/og-cover.jpg" />
+
+    <!-- ========== PERFORMANCE ========== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- ========== APPLE PWA ========== -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <!-- ========== STRUCTURED DATA (TRAVEL AGENCY + LOCAL BUSINESS) ========== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": ["TravelAgency", "LocalBusiness"],
+        "name": "Menty Tours Sri Lanka",
+        "url": "https://www.mentytours.com/",
+        "logo": "https://www.mentytours.com/logo-mark.png",
+        "image": "https://www.mentytours.com/og-cover.jpg",
+        "description": "Menty Tours Sri Lanka — where professionalism meets paradise. Explore top destinations like Sigiriya, Kandy, Ella, Yala, and Galle. Tailor-made tours, family packages, and airport pickup/drop from Colombo.",
+        "telephone": "+94 777 174 175",
+        "email": "mentytours.sl@gmail.com",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "47/9, Thissa Road, Wadduwa",
+          "addressLocality": "Wadduwa",
+          "addressRegion": "Western Province",
+          "postalCode": "12560",
+          "addressCountry": "LK"
+        },
+        "areaServed": "LK",
+        "priceRange": "$$",
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 6.6397,
+          "longitude": 79.9433
+        },
+        "openingHours": "Mo-Su 08:00-22:00",
+        "sameAs": [
+          "https://www.facebook.com/mentytours",
+          "https://www.instagram.com/mentytours",
+          "https://www.tripadvisor.com/Profile/mentytours"
+        ]
+      }
+    </script>
+
+    <!-- ========== WEBSITE STRUCTURED DATA ========== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "Menty Tours Sri Lanka",
+        "url": "https://www.mentytours.com/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://www.mentytours.com/search?q={query}",
+          "query-input": "required name=query"
+        }
+      }
+    </script>
+
+    <!-- ========== TOURIST INFORMATION CENTER SCHEMA ========== -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "TouristInformationCenter",
+        "name": "Menty Tours Sri Lanka",
+        "url": "https://www.mentytours.com/",
+        "description": "Explore the best Sri Lanka tourist attractions and family tour packages from Colombo with airport pickup and drop services. Visit Kandy, Sigiriya, Ella, Mirissa, and Galle with local guides.",
+        "image": "https://www.mentytours.com/og-cover.jpg",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "47/9, Thissa Road, Wadduwa",
+          "addressLocality": "Wadduwa",
+          "addressRegion": "Western Province",
+          "addressCountry": "LK"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": 6.6397,
+          "longitude": 79.9433
+        },
+        "openingHours": "Mo-Su 08:00-22:00",
+        "telephone": "+94 777 174 175",
+        "email": "mentytours.sl@gmail.com"
+      }
+    </script>
   </head>
+
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

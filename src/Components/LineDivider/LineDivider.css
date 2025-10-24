@@ -1,0 +1,49 @@
+/* src/components/LineDivider/LineDivider.css */
+/* Unique prefix: sld- (simple line divider) */
+:root {
+  --sld-ease: cubic-bezier(.22,.9,.24,1);
+}
+
+.sld-divider {
+  border: 0;
+  height: var(--sld-h, 2px);
+  width: var(--sld-w, min(1100px, 92%));
+  margin: 0 auto;
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg,
+      transparent 0%,
+      color-mix(in oklab, var(--sld-color, #1e40af) 25%, transparent) 20%,
+      var(--sld-color, #1e40af) 50%,
+      color-mix(in oklab, var(--sld-color, #1e40af) 25%, transparent) 80%,
+      transparent 100%);
+  background-size: 200% 100%;
+  box-shadow:
+    0 0 0.5px color-mix(in oklab, var(--sld-color, #1e40af) 40%, transparent),
+    0 4px 14px rgba(0,0,0,.04);
+  transform-origin: center;
+  animation: sld-appear .6s var(--sld-ease) both;
+}
+
+/* Subtle moving sheen */
+.sld-animate {
+  animation:
+    sld-appear .6s var(--sld-ease) both,
+    sld-sheen 3.2s linear infinite;
+}
+
+@keyframes sld-appear {
+  from { transform: scaleX(.65); opacity: 0; }
+  to   { transform: scaleX(1);   opacity: 1; }
+}
+
+@keyframes sld-sheen {
+  0%   { background-position-x: 200%; }
+  100% { background-position-x: -200%; }
+}
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .sld-divider,
+  .sld-animate { animation: none; }
+}

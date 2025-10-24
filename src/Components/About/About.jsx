@@ -4,11 +4,11 @@ import "./About.css";
 /* ONE image only */
 import heroImg from "../../assets/about-us.png";
 
-export default function AboutHero() {
+export default function About() {
   const rootRef = useRef(null);
   const stageRef = useRef(null);
 
-  // Scroll var + reveal (robust even without IO)
+  // Scroll variable + reveal
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -22,19 +22,22 @@ export default function AboutHero() {
     window.addEventListener("scroll", onScroll, { passive: true });
 
     // Reveal
-    const io = "IntersectionObserver" in window
-      ? new IntersectionObserver((entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add("ah-show");
-              io.unobserve(e.target);
-            }
-          });
-        }, { threshold: 0.16 })
-      : null;
+    const io =
+      "IntersectionObserver" in window
+        ? new IntersectionObserver(
+            (entries) =>
+              entries.forEach((e) => {
+                if (e.isIntersecting) {
+                  e.target.classList.add("ah-show");
+                  io.unobserve(e.target);
+                }
+              }),
+            { threshold: 0.16 }
+          )
+        : null;
 
     const items = root.querySelectorAll(".ah-reveal");
-    items.forEach(el => io ? io.observe(el) : el.classList.add("ah-show"));
+    items.forEach((el) => (io ? io.observe(el) : el.classList.add("ah-show")));
 
     return () => {
       window.removeEventListener("scroll", onScroll);
@@ -42,7 +45,7 @@ export default function AboutHero() {
     };
   }, []);
 
-  // Subtle tilt with safe bounds
+  // Subtle tilt (safe bounds)
   const onMove = (e) => {
     const box = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - box.left) / box.width - 0.5) * 8; // -4..4
@@ -58,45 +61,30 @@ export default function AboutHero() {
   return (
     <section ref={rootRef} className="aboutx" id="about" aria-label="About Menty Tours">
       <div className="aboutx__container">
-        {/* LEFT: copy */}
+        {/* LEFT — unchanged copy */}
         <div className="aboutx__left ah-reveal">
           <p className="aboutx__eyebrow">About Menty Tours</p>
-
-          <h1 className="aboutx__title">
-            Personal, safe, unforgettable.
-          </h1>
-
+          <h1 className="aboutx__title">Personal, safe, unforgettable.</h1>
           <p className="aboutx__sub">
-            We design trips that balance iconic sights with real local moments — always at your pace and comfort.
+            We design trips that balance iconic sights with real local moments — always at your pace and
+            comfort.
           </p>
-
           <ul className="aboutx__points">
             <li>Licensed expert guides</li>
             <li>Private A/C transfers</li>
             <li>24/7 WhatsApp support</li>
           </ul>
-
           <div className="aboutx__cta">
             <a className="aboutx__btn aboutx__btn--gold" href="/quote">Request a Quote</a>
           </div>
-
           <div className="aboutx__stats">
-            <div className="stat">
-              <strong>12k+</strong>
-              <span>Happy Travelers</span>
-            </div>
-            <div className="stat">
-              <strong>4.9/5</strong>
-              <span>Average Rating</span>
-            </div>
-            <div className="stat">
-              <strong>10+</strong>
-              <span>Years Experience</span>
-            </div>
+            <div className="stat"><strong>12k+</strong><span>Happy Travelers</span></div>
+            <div className="stat"><strong>4.9/5</strong><span>Average Rating</span></div>
+            <div className="stat"><strong>10+</strong><span>Years Experience</span></div>
           </div>
         </div>
 
-        {/* RIGHT: single image with decorative CSS only */}
+        {/* RIGHT — just the image, responsive & animated */}
         <div
           className="aboutx__right ah-reveal"
           onMouseMove={onMove}
@@ -105,10 +93,20 @@ export default function AboutHero() {
         >
           <div className="aboutx__stage" ref={stageRef}>
             <figure className="aboutx__figure">
-              <img className="aboutx__img" src={heroImg} alt="" />
+              <div className="aboutx__imgWrap">
+                <img
+                  className="aboutx__img"
+                  src={heroImg}
+                  alt="Sri Lanka miniature map with landmarks"
+                  loading="eager"
+                />
+                {/* subtle highlight + edge fade (decoration only) */}
+                <span className="aboutx__shine" aria-hidden="true" />
+                <span className="aboutx__edge" aria-hidden="true" />
+              </div>
             </figure>
 
-            {/* floating glass rating (CSS only decoration) */}
+            {/* optional tiny glass badge (kept minimal) */}
             <div className="aboutx__badge">
               <span className="stars" aria-hidden="true">★★★★★</span>
               <b>Traveler-Loved</b>

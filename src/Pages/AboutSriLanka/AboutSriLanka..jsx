@@ -1,5 +1,7 @@
+// src/components/AboutSriLanka/AboutSriLanka.jsx
 import React, { useEffect } from "react";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import {
   Landmark,
   Building2,
@@ -11,8 +13,9 @@ import {
   Globe2,
 } from "lucide-react";
 import "./AboutSriLanka.css";
+import SEO from "../../Components/Seo/SEO.jsx";
 
-/* ==== Import Images Correctly ==== */
+// ===== Import Images =====
 import sigiriya from "../../assets/Sigiriya.jpg";
 import kandy from "../../assets/Kandy .jpg";
 import ella from "../../assets/Ella.jpg";
@@ -27,17 +30,41 @@ import trincomalee from "../../assets/Trincomalee.jpg";
 import colombo from "../../assets/Colombo.jpg";
 
 export default function AboutSriLanka() {
+  const navigate = useNavigate();
+
+  // === SEO meta ===
+  const seo = {
+    title: "Top Tourist Attractions in Sri Lanka | Menty Tours",
+    description:
+      "Explore Sri Lanka's best tourist attractions with Menty Tours — from Sigiriya Rock Fortress and Kandy Temple to Yala Safari, Ella train, and Mirissa beach. Discover top 10 places to visit in Sri Lanka with expert local guides.",
+    canonical: "https://www.mentytours.com/about-sri-lanka",
+    ogImage: "https://www.mentytours.com/og-cover.jpg",
+  };
+
+  // === Back navigation ===
+  const goBack = (e) => {
+    e?.preventDefault?.();
+    try {
+      const ref = document.referrer;
+      if (ref && new URL(ref).origin === window.location.origin) {
+        navigate(-1);
+        return;
+      }
+    } catch {}
+    navigate("/", { replace: true });
+  };
+
+  // === Scroll reveal ===
   useEffect(() => {
     const els = document.querySelectorAll(".asla-reveal");
     const io = new IntersectionObserver(
-      (entries) => {
+      (entries) =>
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add("asla-show");
             io.unobserve(entry.target);
           }
-        });
-      },
+        }),
       { threshold: 0.15 }
     );
     els.forEach((el) => io.observe(el));
@@ -46,8 +73,21 @@ export default function AboutSriLanka() {
 
   return (
     <div className="asla-page">
-      {/* ===== Hero ===== */}
-      <section className="asla-hero">
+      <SEO {...seo} />
+
+      {/* ===== Topbar Back ===== */}
+      <nav className="asla-topbar asla-reveal">
+        <button
+          className="asla-btn asla-btn--ghost asla-back"
+          onClick={goBack}
+          aria-label="Go Back"
+        >
+          ← Back
+        </button>
+      </nav>
+
+      {/* ===== Hero Section ===== */}
+      <section className="asla-hero" id="sri-lanka-tourism">
         <div className="asla-overlay"></div>
         <motion.div
           className="asla-hero-content"
@@ -55,355 +95,183 @@ export default function AboutSriLanka() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2 }}
         >
-          <h1>About Sri Lanka Attractions</h1>
+          <h1>Top Tourist Attractions in Sri Lanka</h1>
           <p>
-            Sri Lanka, the “Pearl of the Indian Ocean,” is a land of endless
-            beauty, where ancient history meets breathtaking nature. This island
-            offers mountains, beaches, wildlife, and heritage sites — all within
-            a few hours’ journey. Let’s explore the heart and soul of Sri Lanka.
+            Discover the most beautiful and historic places in Sri Lanka — the
+            “Pearl of the Indian Ocean.” From ancient cities to tropical beaches
+            and wildlife parks, explore a land of culture, adventure, and
+            breathtaking nature.
           </p>
         </motion.div>
       </section>
 
-      {/* ===== SIGIRIYA ===== */}
-      <motion.section
-        className="asla-section asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Landmark className="asla-icon" /> Sigiriya – The Lion Rock
-            Fortress
-          </h2>
-          <p>
-            Sigiriya, also known as the “Eighth Wonder of the World,” is an
-            ancient fortress built atop a massive 200-meter rock by King
-            Kashyapa in the 5th century. Its name means “Lion Rock,” inspired by
-            the giant lion gateway that once guarded its entrance.
-          </p>
-          <p>
-            Visitors can admire the world-famous Sigiriya frescoes — graceful
-            maidens painted in vibrant colors — and the Mirror Wall that still
-            glimmers after centuries. The top offers panoramic views of forests
-            and villages stretching into the horizon.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
+      {/* ===== Attraction Sections ===== */}
+      {[
+        {
+          id: "sigiriya",
+          icon: <Landmark />,
+          title: "Sigiriya – The Lion Rock Fortress",
+          text: [
+            "Sigiriya, also known as the “Eighth Wonder of the World,” is an ancient rock fortress built by King Kashyapa in the 5th century.",
+            "Admire the world-famous frescoes and climb to the summit for panoramic jungle views — one of Sri Lanka’s most iconic UNESCO World Heritage Sites.",
+          ],
+          img: sigiriya,
+          alt: "Sigiriya Rock Fortress Sri Lanka",
+        },
+        {
+          id: "kandy",
+          icon: <Building2 />,
+          title: "Kandy – The Cultural Capital",
+          text: [
+            "Kandy, the last royal capital of Sri Lanka, is home to the sacred Temple of the Tooth Relic — a key Buddhist pilgrimage site.",
+            "Its Esala Perahera festival fills the streets with music, elephants, and traditional dancers every July or August.",
+          ],
+          img: kandy,
+          alt: "Kandy Temple of the Tooth Sri Lanka",
+          altStyle: true,
+        },
+        {
+          id: "ella",
+          icon: <Mountain />,
+          title: "Ella – The Misty Hill Escape",
+          text: [
+            "Ella is a hill-country gem surrounded by tea plantations and waterfalls.",
+            "Visit the famous Nine Arches Bridge and Ella Rock for incredible views and cool mountain air.",
+          ],
+          img: ella,
+          alt: "Ella Nine Arches Bridge Sri Lanka",
+        },
+        {
+          id: "nuwaraeliya",
+          icon: <Trees />,
+          title: "Nuwara Eliya – Little England",
+          text: [
+            "Known for its colonial charm and cool climate, Nuwara Eliya features tea estates, Gregory Lake, and Hakgala Gardens.",
+            "It’s one of Sri Lanka’s most romantic and scenic highlands.",
+          ],
+          img: tea,
+          alt: "Nuwara Eliya Tea Plantations Sri Lanka",
+          altStyle: true,
+        },
+        {
+          id: "mirissa",
+          icon: <Waves />,
+          title: "Mirissa – Tropical Paradise",
+          text: [
+            "Mirissa’s beaches are famous for surfing, whale watching, and stunning sunsets from Palm Tree Hill.",
+            "Relax and enjoy the laid-back southern coast of Sri Lanka.",
+          ],
+          img: mirissa,
+          alt: "Mirissa Beach Sri Lanka",
+        },
+        {
+          id: "galle",
+          icon: <Globe2 />,
+          title: "Galle – The Dutch Fort City",
+          text: [
+            "Galle Fort is a UNESCO World Heritage site combining colonial architecture and oceanfront beauty.",
+            "Walk through cobblestone streets and admire historic lighthouses and art galleries.",
+          ],
+          img: galle,
+          alt: "Galle Dutch Fort Sri Lanka",
+          altStyle: true,
+        },
+        {
+          id: "yala",
+          icon: <Sun />,
+          title: "Yala National Park – The Wild Heart",
+          text: [
+            "Sri Lanka’s top wildlife park, home to elephants, peacocks, and the world’s highest leopard density.",
+            "A must-visit for nature and photography lovers.",
+          ],
+          img: yala,
+          alt: "Yala National Park Safari Sri Lanka",
+        },
+        {
+          id: "anuradhapura",
+          icon: <Landmark />,
+          title: "Anuradhapura – The Sacred City of Kings",
+          text: [
+            "An ancient capital filled with Buddhist monuments, stupas, and the sacred Bodhi Tree.",
+            "A UNESCO World Heritage site representing Sri Lanka’s deep spiritual roots.",
+          ],
+          img: anuradhapura,
+          alt: "Anuradhapura Sacred City Sri Lanka",
+          altStyle: true,
+        },
+        {
+          id: "polonnaruwa",
+          icon: <Building2 />,
+          title: "Polonnaruwa – The Medieval Marvel",
+          text: [
+            "Polonnaruwa’s well-preserved ruins and Gal Vihara statues showcase Sri Lanka’s glorious medieval past.",
+            "A must-visit for history enthusiasts.",
+          ],
+          img: polonnaruwa,
+          alt: "Polonnaruwa Ruins Sri Lanka",
+        },
+        {
+          id: "dambulla",
+          icon: <Landmark />,
+          title: "Dambulla – The Golden Cave Temple",
+          text: [
+            "The Dambulla cave temples are adorned with over 150 golden Buddha statues and intricate murals.",
+            "One of Sri Lanka’s most remarkable cultural landmarks.",
+          ],
+          img: dambulla,
+          alt: "Dambulla Cave Temple Sri Lanka",
+          altStyle: true,
+        },
+        {
+          id: "trincomalee",
+          icon: <Waves />,
+          title: "Trincomalee – The Eastern Beauty",
+          text: [
+            "Famous for pristine beaches and coral reefs, Trincomalee is a diver’s paradise.",
+            "Visit Koneswaram Temple for breathtaking coastal views.",
+          ],
+          img: trincomalee,
+          alt: "Trincomalee Beach Sri Lanka",
+        },
+        {
+          id: "colombo",
+          icon: <MapPin />,
+          title: "Colombo – The Modern Metropolis",
+          text: [
+            "The vibrant capital city blends colonial heritage with modern attractions.",
+            "Enjoy shopping, fine dining, temples, and the famous Galle Face Green promenade.",
+          ],
+          img: colombo,
+          alt: "Colombo City Sri Lanka",
+          altStyle: true,
+        },
+      ].map((item, i) => (
+        <motion.section
+          key={item.id}
+          id={item.id}
+          className={`asla-section asla-reveal ${item.altStyle ? "asla-alt" : ""}`}
+          initial={{ opacity: 0, y: 80 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          <img src={sigiriya} alt="Sigiriya Rock Fortress" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== KANDY ===== */}
-      <motion.section
-        className="asla-section asla-alt asla-reveal"
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Building2 className="asla-icon" /> Kandy – The Cultural Capital
-          </h2>
-          <p>
-            Set in the lush hills of central Sri Lanka, Kandy is the last royal
-            capital of the Sinhalese kingdom. It is home to the sacred Temple of
-            the Tooth Relic, one of Buddhism’s holiest shrines.
-          </p>
-          <p>
-            Every July or August, the Esala Perahera festival transforms the
-            city into a dazzling celebration of elephants, dancers, and
-            drummers, honoring the sacred relic.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={kandy} alt="Temple of the Tooth Relic, Kandy" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== ELLA ===== */}
-      <motion.section
-        className="asla-section asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Mountain className="asla-icon" /> Ella – The Misty Hill Escape
-          </h2>
-          <p>
-            Ella is a peaceful hill-station surrounded by tea plantations,
-            waterfalls, and mountain peaks. The iconic Nine Arches Bridge and
-            Ella Rock make it one of Sri Lanka’s most scenic destinations.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={ella} alt="Ella Nine Arches Bridge" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== NUWARA ELIYA ===== */}
-      <motion.section
-        className="asla-section asla-alt asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Trees className="asla-icon" /> Nuwara Eliya – Little England
-          </h2>
-          <p>
-            Known as “Little England,” Nuwara Eliya blends colonial charm with
-            emerald tea gardens. The cool climate, lakes, and gardens make it
-            one of the most romantic getaways in the island.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={tea} alt="Nuwara Eliya Tea Plantation" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== MIRISSA ===== */}
-      <motion.section
-        className="asla-section asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Waves className="asla-icon" /> Mirissa – Tropical Paradise
-          </h2>
-          <p>
-            Mirissa is a postcard-perfect beach on the southern coast. It’s
-            famous for surfing, whale watching, and its iconic palm tree hill
-            with breathtaking sunsets.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={mirissa} alt="Mirissa Beach" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== GALLE ===== */}
-      <motion.section
-        className="asla-section asla-alt asla-reveal"
-        initial={{ opacity: 0, y: 100 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Globe2 className="asla-icon" /> Galle – The Dutch Fort City
-          </h2>
-          <p>
-            Galle is a UNESCO World Heritage Site filled with colonial history
-            and coastal beauty. Its cobblestone streets, lighthouses, and ocean
-            walls make it a must-see stop in southern Sri Lanka.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={galle} alt="Galle Fort" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== YALA ===== */}
-      <motion.section
-        className="asla-section asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Sun className="asla-icon" />  Yala National Park – The Wild Heart
-          </h2>
-          <p>
-            Home to elephants, peacocks, and the world’s highest density of
-            leopards, Yala is a wildlife lover’s dream. Jeep safaris offer
-            unforgettable adventures across its savannahs and lagoons.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={yala} alt="Yala National Park" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== ANURADHAPURA ===== */}
-      <motion.section
-        className="asla-section asla-alt asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Landmark className="asla-icon" /> Anuradhapura – The Sacred City
-            of Kings
-          </h2>
-          <p>
-            This ancient capital, rich in Buddhist heritage, features massive
-            stupas, monasteries, and the sacred Bodhi Tree — the world’s oldest
-            recorded tree. A place of peace and history.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={anuradhapura} alt="Anuradhapura" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== POLONNARUWA ===== */}
-      <motion.section
-        className="asla-section asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Building2 className="asla-icon" /> 🏯 Polonnaruwa – The Medieval
-            Marvel
-          </h2>
-          <p>
-            Polonnaruwa’s ruins tell stories of a glorious kingdom. The ancient
-            palaces and Gal Vihara statues make it one of the island’s most
-            beautiful archaeological sites.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={polonnaruwa} alt="Polonnaruwa Ruins" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== DAMBULLA ===== */}
-      <motion.section
-        className="asla-section asla-alt asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Landmark className="asla-icon" />  Dambulla – The Golden Cave
-            Temple
-          </h2>
-          <p>
-            Dambulla’s cave temples are covered in Buddhist murals and filled
-            with golden statues. It’s one of Sri Lanka’s best-preserved cultural
-            treasures.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={dambulla} alt="Dambulla Cave Temple" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== TRINCOMALEE ===== */}
-      <motion.section
-        className="asla-section asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <Waves className="asla-icon" /> 🌊 Trincomalee – The Eastern Beauty
-          </h2>
-          <p>
-            Trincomalee’s beaches and coral reefs make it a haven for divers.
-            Visit the colorful Koneswaram Temple perched above the ocean for an
-            unforgettable view.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={trincomalee} alt="Trincomalee Beach" />
-        </motion.div>
-      </motion.section>
-
-      {/* ===== COLOMBO ===== */}
-      <motion.section
-        className="asla-section asla-alt asla-reveal"
-        initial={{ opacity: 0, y: 80 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1 }}
-      >
-        <div className="asla-text">
-          <h2>
-            <MapPin className="asla-icon" /> Colombo – The Modern Metropolis
-          </h2>
-          <p>
-            The capital city blends history, culture, and modern lifestyle.
-            Explore temples, street markets, and the oceanfront promenade of
-            Galle Face Green for a true taste of city life.
-          </p>
-        </div>
-        <motion.div
-          className="asla-image"
-          initial={{ scale: 0.9, opacity: 0 }}
-          whileInView={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 1 }}
-        >
-          <img src={colombo} alt="Colombo City" />
-        </motion.div>
-      </motion.section>
+          <div className="asla-text">
+            <h2>
+              {item.icon} {item.title}
+            </h2>
+            {item.text.map((t, idx) => (
+              <p key={idx}>{t}</p>
+            ))}
+          </div>
+          <motion.div
+            className="asla-image"
+            initial={{ scale: 0.9, opacity: 0 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1 }}
+          >
+            <img src={item.img} alt={item.alt} loading="lazy" />
+          </motion.div>
+        </motion.section>
+      ))}
 
       {/* ===== CTA ===== */}
       <motion.section
@@ -414,13 +282,12 @@ export default function AboutSriLanka() {
       >
         <h2>🌴 Discover the Wonder of Sri Lanka</h2>
         <p>
-          From the mountains to the seas, Sri Lanka is a destination that
-          captivates the soul. Every journey reveals stories of faith, beauty,
-          and resilience — inviting you to connect with nature and culture in
-          harmony.
+          From the misty hills to golden beaches, Sri Lanka is a destination of
+          endless beauty. Plan your perfect holiday with Menty Tours — trusted
+          local experts for personalized itineraries.
         </p>
         <motion.a
-          href="/contact"
+          href="/quote"
           className="asla-btn"
           whileHover={{
             scale: 1.05,

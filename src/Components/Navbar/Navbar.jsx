@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
 import logo from "../../assets/logo.png";
+import flagLK from "../../assets/sri-lanka-flag.svg";
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
   useEffect(() => {
@@ -25,15 +26,28 @@ export default function Navbar() {
           <span>MENTY TOURS</span>
         </a>
 
-        {/* Desktop Nav */}
+        {/* Desktop links */}
         <nav className="nav-links">
-          <a href="/">Home</a>
-          <a href="#about">About Us</a>
-          <a href="#services">Services</a>
+          <a href="#hero">Home</a>
           <a href="#packages">Packages</a>
+          <a href="#memories">Memories</a>
           <a href="#contact">Contact Us</a>
           <a href="/quote" className="nav-btn">Plan My Trip</a>
         </nav>
+
+        {/* 3D Sri Lankan Flag — DESKTOP (fixed to viewport right) */}
+        <a
+          className="flag-3d flag-3d--desktop animate"
+          href="https://www.srilanka.travel/"
+          title="Sri Lanka"
+          aria-label="Sri Lankan flag"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span className="flag-face">
+            <img src={flagLK} alt="Sri Lankan flag" />
+          </span>
+        </a>
 
         {/* Hamburger */}
         <button
@@ -41,9 +55,7 @@ export default function Navbar() {
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
         >
-          <span></span>
-          <span></span>
-          <span></span>
+          <span></span><span></span><span></span>
         </button>
 
         {/* Overlay */}
@@ -55,7 +67,7 @@ export default function Navbar() {
         {/* Mobile Drawer */}
         <div className={`mobile-drawer ${menuOpen ? "open" : ""}`}>
           <div className="drawer-header">
-            <a href="/" className="drawer-logo">
+            <a href="/" className="drawer-logo" onClick={() => setMenuOpen(false)}>
               <img src={logo} alt="Menty Tours" />
               <span>MENTY TOURS</span>
             </a>
@@ -69,16 +81,12 @@ export default function Navbar() {
           </div>
 
           <nav className="drawer-links">
-            <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
-            <a href="#about" onClick={() => setMenuOpen(false)}>About Us</a>
+            <a href="#hero" onClick={() => setMenuOpen(false)}>Home</a>
             <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
             <a href="#packages" onClick={() => setMenuOpen(false)}>Packages</a>
+            <a href="#memories" onClick={() => setMenuOpen(false)}>Memories</a>
             <a href="#contact" onClick={() => setMenuOpen(false)}>Contact Us</a>
-            <a
-              href="/quote"
-              className="drawer-btn"
-              onClick={() => setMenuOpen(false)}
-            >
+            <a href="/quote" className="drawer-btn" onClick={() => setMenuOpen(false)}>
               Plan My Trip
             </a>
           </nav>

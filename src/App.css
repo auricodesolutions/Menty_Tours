@@ -1,41 +1,120 @@
-/* ===== Global Resets & Layout Fix ===== */
-html, body {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: hidden; /* ✅ removes white gap on mobile */
-  margin: 0;
-  padding: 0;
-  background: #fff;
-  font-family: "Inter", sans-serif;
+/* =========================================================
+   Global Reset + Overflow Fixes (mobile-safe)
+   ========================================================= */
+:root {
+  --container: 1200px;
+  --space: clamp(14px, 2.8vw, 24px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+* { min-width: 0; }                    /* stops flex items from overflowing */
+
+html {
+  -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;                   /* fallback */
+  background: #fff;
+  font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
 }
 
-img, video {
+/* Modern engines avoid the 100vw + scrollbar gutter issue */
+@supports (scrollbar-gutter: stable) {
+  html { scrollbar-gutter: stable both-edges; }
+}
+@supports (overflow-x: clip) {
+  html, body, #root { overflow-x: clip; }   /* preferred when available */
+}
+
+/* Media elements never exceed viewport width */
+img, video, canvas, svg, iframe {
+  display: block;
   max-width: 100%;
   height: auto;
-  display: block;
 }
 
-/* ===== App Defaults ===== */
-.App {
-  text-align: center;
+/* Basic elements */
+a { color: inherit; text-decoration: none; }
+button, input, select, textarea { font: inherit; }
+p, h1, h2, h3, h4, h5, h6 { overflow-wrap: anywhere; }
+:focus-visible { outline: 3px solid #0ea5e9; outline-offset: 2px; }
+
+/* =========================================================
+   Layout Helpers (use these instead of width:100vw)
+   ========================================================= */
+.section, .navbar, .footer, .hero { width: 100%; }
+
+.section__inner, .container, .wrap {
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--space);
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Full-bleed on purpose only (no side padding inside) */
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
 }
 
+/* Hero video pattern */
+.hero__media,
+.hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.25), rgba(0,0,0,.55));
+}
+
+/* Chips / badges (prevents nowrap overflow) */
+.chip-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 8px 12px; border-radius: 999px;
+  background: rgba(0,0,0,.35); color: #fff;
+  max-width: 100%; white-space: normal; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* Tables / code blocks can scroll instead of pushing layout */
+pre, code, table { max-width: 100%; overflow: auto; }
+
+/* Carousels commonly overflow; keep them contained */
+.swiper, .slick-slider { max-width: 100%; overflow: hidden; }
+
+/* Long navs won’t force a wide page */
+.navbar__items { display: flex; flex-wrap: wrap; }
+
+/* Safe-area padding for fixed bars (iOS) */
+.safe-pad {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Tighter padding on very small screens */
+@media (max-width: 480px) {
+  .section__inner { padding-inline: 16px; }
+}
+
+/* =========================================================
+   CRA Demo Styles (optional – keep if you use them)
+   ========================================================= */
+.App { text-align: center; }
+
+.App-logo { height: 40vmin; pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+  .App-logo { animation: App-logo-spin infinite 20s linear; }
 }
 
 .App-header {
@@ -49,11 +128,9 @@ img, video {
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
+.App-link { color: #61dafb; }
 
 @keyframes App-logo-spin {
   from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  to   { transform: rotate(360deg); }
 }
