@@ -1,10 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./OurPartners.css";
 
-import jetwing from "../../assets/Partners/Jetwing.png";
+import tripadvisor from "../../assets/Partners/Tripadvisor.png";
 import resplendent from "../../assets/Partners/logo-resplendent.png";
 import cinnamon from "../../assets/Partners/logo-cinnamon.png";
-import uga from "../../assets/Partners/logo-cinnamon.png";
 import aman from "../../assets/Partners/logo-view360.png";
 import sltda from "../../assets/Partners/sltda_logo.png";
 
@@ -28,10 +27,9 @@ const useReveal = () => {
 };
 
 const DEFAULT_PARTNERS = [
-  { name: "Jetwing Hotels", logo: jetwing, href: "https://www.jetwinghotels.com/" },
+  { name: "Trip Advisor", logo: tripadvisor, href: "https://www.tripadvisor.com/" },
   { name: "Resplendent Ceylon", logo: resplendent, href: "https://www.resplendentceylon.com/" },
   { name: "Cinnamon Hotels", logo: cinnamon, href: "https://www.cinnamonhotels.com/" },
-  { name: "Uga Escapes", logo: uga, href: "https://www.ugaescapes.com/" },
   { name: "Aman Resorts", logo: aman, href: "https://www.aman.com/" },
   { name: "SLTDA Licensed", logo: sltda, href: "https://www.sltda.gov.lk/" },
 ];

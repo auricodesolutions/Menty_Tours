@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Hero.css";
 import heroVideo from "../../assets/hero.mp4";
-import flagLK from "../../assets/sri-lanka-flag.svg"; // make sure this file exists
+import flagLK from "../../assets/sri-lanka-flag.svg";
 import { Palmtree, MapPin, Compass } from "lucide-react";
 import Loader from "../Loader/Loader";
 
@@ -70,24 +70,23 @@ export default function Hero() {
         <source src={heroVideo} type="video/mp4" />
       </video>
 
-      {/* Mobile-only flag inside hero */}
-      <a
-        className="flag-3d flag-hero-mobile animate"
-        href="https://www.srilanka.travel/"
-        aria-label="Sri Lankan flag"
-        target="_blank" rel="noreferrer"
-      >
-        <span className="flag-face">
-          <img src={flagLK} alt="Sri Lankan flag" />
-        </span>
-      </a>
-
       <div className="hero__shade-left" aria-hidden="true" />
       <div className="hero__shade-bottom" aria-hidden="true" />
 
       <div className="container hero__frame">
         <div className="hero__content">
-          <p className="eyebrow">Sri Lanka • Authentic &amp; Tailor-Made</p>
+          {/* Eyebrow pill with tiny flag (wraps nicely on mobile) */}
+          <p
+            className="eyebrow"
+            role="text"
+            aria-label="Sri Lanka — Authentic & Tailor-Made"
+          >
+            <img src={flagLK} alt="" className="flag-mini" aria-hidden="true" />
+            <span className="eyebrow__text">
+              Sri Lanka • Authentic &amp; Tailor&#8209;Made
+            </span>
+          </p>
+
           <h1 className="hero__title">Where Wonders Await</h1>
           <p className="hero__subtitle">
             Your journey, your pace ,curated stays, epic views, and real local experiences.

@@ -185,17 +185,7 @@ export default function ContactPage() {
       </section>
 
       {/* Optional floating WhatsApp CTA */}
-      <a
-        className="te-wa"
-        href={`https://wa.me/${PHONE_WA}?text=${encodeURIComponent(
-          "Hi Menty Tours! I’d like to know more about your packages."
-        )}`}
-        target="_blank"
-        rel="noreferrer"
-        aria-label="Chat on WhatsApp"
-      >
-        <svg viewBox="0 0 24 24"><path d="M20.52 3.48A11.9 11.9 0 0 0 12.04 0C5.5 0 .2 5.3.2 11.84a11.8 11.8 0 0 0 1.6 6.03L0 24l6.33-1.65a11.86 11.86 0 0 0 5.7 1.47h.01c6.54 0 11.84-5.3 11.84-11.84 0-3.17-1.23-6.14-3.36-8.5zM12.04 21.4h-.01a9.57 9.57 0 0 1-4.88-1.34l-.35-.2-3.76.98 1-3.66-.23-.38a9.6 9.6 0 1 1 8.23 4.6z"/></svg>
-      </a>
+      
     </main>
   );
 }

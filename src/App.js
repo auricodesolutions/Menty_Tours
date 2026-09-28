@@ -66,7 +66,7 @@ function HomePage() {
       <LineDivider color="#c9a24b" thickness={3} />
 
       <OurPartners />
-      <Contact />
+      {/* <Contact /> */}
       <FloatingButtons />
     </>
   );

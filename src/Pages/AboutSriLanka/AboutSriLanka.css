@@ -1,218 +1,157 @@
-.asla-page {
-  font-family: "Poppins", sans-serif;
-  color: #1a1a1a;
-  overflow-x: hidden;
+/* ========== Tokens ========== */
+:root{
+  --ink:#0e1a2b;
+  --bg:#ffffff;
+  --surface:#f7f9fb;
+  --brand:#0b5b48;
+  --gold:#ffb703;
+  --gold-soft:#ffd166;
+  --muted:#6b7280;
+  --ring:rgba(11,91,72,.35);
+  --shadow:0 10px 26px rgba(0,0,0,.08);
 }
 
-/* ---------- Topbar Back (NEW) ---------- */
-.asla-topbar{
-  max-width: 1100px;
-  margin: 10px auto 0;
-  padding: 0 16px;
-  display: flex;
-  justify-content: flex-start;
-  position: sticky;     /* stays visible a bit while scrolling */
-  top: 8px;
-  z-index: 20;
-}
+.asla-page{ font-family:Poppins,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; color:#1a1a1a; background:var(--bg); }
 
+/* ========== Quote-style Hero (matches your Quote page) ========== */
+.asla-hero.asla-hero--quote{
+  margin:12px 12px 0;
+  border-radius:28px;
+  overflow:hidden;
+  height:clamp(320px, 45vh, 520px);
+  position:relative;
+  box-shadow:0 12px 40px rgba(0,0,0,.18);
+}
+.asla-hero-media{
+  position:absolute; inset:0;
+  background:url("../../assets/travel.jpg") center/cover no-repeat;
+  transform:scale(1.04);
+}
+.asla-hero-overlay{
+  position:absolute; inset:0;
+  background:linear-gradient(90deg,
+    rgba(0,0,0,.60) 0%,
+    rgba(0,0,0,.42) 38%,
+    rgba(0,0,0,.24) 60%,
+    rgba(0,0,0,.08) 100%);
+}
+.asla-hero-inner{
+  position:relative; z-index:2; height:100%;
+  display:grid; align-content:center; text-align:left;
+  max-width:1100px; width:100%;
+  padding:28px clamp(18px, 4vw, 40px);
+  color:#fff;
+}
+.asla-hero--quote h1{
+  font-family:"Playfair Display",serif;
+  font-size:clamp(1.8rem, 3.2vw, 2.6rem);
+  line-height:1.15; margin:12px 0 8px;
+  text-shadow:0 8px 24px rgba(0,0,0,.45);
+}
+.asla-hero--quote p{
+  font-size:clamp(.95rem, 1.05vw, 1.1rem);
+  color:#e8e8e8; max-width:720px;
+}
+.asla-btn{ font-weight:700; cursor:pointer; border-radius:999px; text-decoration:none; }
 .asla-btn--ghost{
-  background: #fff;
-  color: #1a1a1a;
-  border: 1px solid rgba(0,0,0,.12);
-  border-radius: 999px;
-  padding: 8px 12px;
-  min-height: 36px;
-  font-weight: 700;
-  box-shadow: 0 10px 26px rgba(0,0,0,.08);
-  cursor: pointer;
-  transition: transform .18s ease, box-shadow .18s ease;
+  background:#fff; color:#1a1a1a; border:1px solid rgba(0,0,0,.12);
+  padding:8px 14px; min-height:40px; box-shadow:var(--shadow);
+  transition:transform .16s ease, box-shadow .16s ease;
 }
-.asla-btn--ghost:hover{
-  transform: translateY(-1px);
-  box-shadow: 0 14px 36px rgba(0,0,0,.12);
-}
-.asla-btn--ghost:focus-visible{
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(255,255,255,.9), 0 0 0 6px rgba(11,91,72,.35);
-}
-/* optional hook if you want to target the back specifically */
-.asla-back {}
-
-/* ---------- Hero ---------- */
-.asla-hero {
-  position: relative;
-  background: url("../../assets/travel.jpg") center/cover fixed no-repeat;
-  height: 85vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: white;
+.asla-btn--ghost:hover{ transform:translateY(-1px); box-shadow:0 14px 36px rgba(0,0,0,.12); }
+.asla-btn--ghost:focus-visible{ outline:none; box-shadow:0 0 0 3px #fff, 0 0 0 6px var(--ring); }
+.asla-hero-back{
+  position:absolute; top:16px; left:16px;
+  padding:10px 16px; min-height:40px; border-radius:999px;
+  background:rgba(255,255,255,.9); border:1px solid rgba(255,255,255,.7);
+  backdrop-filter:blur(4px);
 }
 
-.asla-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  backdrop-filter: blur(3px);
-}
-
-.asla-hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 750px;
-  animation: fadeIn 1.5s ease-out;
-}
-
-.asla-hero-content h1 {
-  font-family: "Playfair Display", serif;
-  font-size: 3rem;
-  margin-bottom: 1rem;
-}
-
-.asla-hero-content p {
-  font-size: 1.2rem;
-  line-height: 1.6;
-  color: #f1f1f1;
-}
-
-/* ---------- Sections ---------- */
-.asla-section {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 2rem;
-  padding: 5rem 8%;
-  background: #fff;
-  transition: all 0.3s ease;
-}
-
-.asla-section:nth-child(even) {
-  background: #f9fafb;
-}
-
-.asla-section.asla-alt {
-  flex-direction: row-reverse;
-}
-
-.asla-text {
-  flex: 1 1 450px;
-}
-
-.asla-text h2 {
-  color: #0b5b48;
-  font-family: "Playfair Display", serif;
-  font-size: 1.9rem;
-  margin-bottom: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.asla-icon {
-  color: #ffb703;
-  flex-shrink: 0;
-}
-
-.asla-text p {
-  font-size: 1.05rem;
-  line-height: 1.8;
-}
-
-.asla-image {
-  flex: 1 1 400px;
-  text-align: center;
-}
-
-.asla-image img {
-  width: 100%;
-  max-width: 550px;
-  border-radius: 14px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
-  transition: transform 0.6s ease, box-shadow 0.6s ease;
-}
-
-.asla-image img:hover {
-  transform: scale(1.05) rotate(0.5deg);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-}
-
-/* ---------- CTA ---------- */
-.asla-cta {
-  text-align: center;
-  background: linear-gradient(135deg, #0b5b48, #006e51);
-  color: #fff;
-  padding: 5rem 2rem;
-}
-
-.asla-cta h2 {
-  font-family: "Playfair Display", serif;
-  font-size: 2rem;
-  margin-bottom: 1rem;
-}
-
-.asla-cta p {
-  max-width: 700px;
-  margin: 0 auto 2rem;
-  font-size: 1.1rem;
-}
-
-.asla-btn {
-  background: #ffb703;
-  color: #1a1a1a;
-  text-decoration: none;
-  padding: 0.9rem 2.3rem;
-  border-radius: 40px;
-  font-weight: 600;
-  transition: 0.3s ease;
-}
-
-.asla-btn:hover {
-  background: #ffd166;
-  transform: translateY(-3px);
-}
-
-/* ---------- Animations ---------- */
-.asla-reveal {
-  opacity: 0;
-  transform: translateY(50px);
-  transition: all 1s ease;
-}
-
-.asla-reveal.asla-show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
+@media (max-width:900px){
+  .asla-hero.asla-hero--quote{
+    height:clamp(280px, 44vh, 420px);
+    margin:8px 8px 0; border-radius:18px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .asla-hero-inner{ padding:18px 16px 24px; }
+  .asla-hero-back{ top:12px; left:12px; }
 }
 
-/* ---------- Responsive ---------- */
-@media (max-width: 900px) {
-  .asla-section {
-    flex-direction: column;
-    padding: 3.5rem 6%;
-  }
-
-  .asla-text, .asla-image {
-    flex: 1 1 100%;
-    text-align: left;
-  }
-
-  .asla-hero-content h1 {
-    font-size: 2.3rem;
-  }
-
-  .asla-hero-content p {
-    font-size: 1rem;
-  }
+/* ========== Quick Facts ========== */
+.asla-facts{
+  max-width:1100px; margin:16px auto 24px; padding:12px 16px;
+  display:flex; flex-wrap:wrap; gap:10px; justify-content:center;
 }
+.asla-fact{
+  background:#fff; border:1px solid rgba(0,0,0,.08); box-shadow:var(--shadow);
+  padding:8px 12px; border-radius:999px; font-weight:600;
+  display:flex; align-items:center; gap:8px;
+}
+
+/* ========== Filters ========== */
+.asla-filters{ max-width:1100px; margin:8px auto 10px; padding:0 16px; }
+.asla-filters-row{ display:flex; flex-wrap:wrap; align-items:center; gap:10px; }
+.asla-filter-icon{ color:var(--muted); }
+.asla-chip{
+  border-radius:999px; border:1px solid rgba(0,0,0,.12); background:#fff;
+  padding:8px 14px; font-weight:700; cursor:pointer;
+  transition:background .16s ease, transform .12s ease, box-shadow .16s ease;
+}
+.asla-chip:hover{ transform:translateY(-1px); box-shadow:var(--shadow); }
+.asla-chip.is-active{
+  background:linear-gradient(135deg, var(--gold), var(--gold-soft));
+  color:#1a1a1a; border-color:transparent;
+}
+
+/* ========== Card Grid ========== */
+.asla-grid{
+  max-width:1200px; margin:10px auto 60px; padding:0 16px;
+  display:grid; grid-template-columns:repeat(12,1fr); gap:18px;
+}
+@media (max-width:1024px){ .asla-grid{ grid-template-columns:repeat(8,1fr);} }
+@media (max-width:680px){ .asla-grid{ grid-template-columns:repeat(4,1fr);} }
+
+.asla-card{
+  grid-column:span 6; background:#fff; border-radius:18px; overflow:hidden;
+  border:1px solid rgba(0,0,0,.06); display:flex; flex-direction:column; min-height:360px;
+  box-shadow:0 12px 28px rgba(0,0,0,.06);
+}
+@media (max-width:1024px){ .asla-card{ grid-column:span 8; } }
+@media (max-width:680px){ .asla-card{ grid-column:span 4; } }
+
+.asla-card-media{ position:relative; aspect-ratio:16/9; overflow:hidden; }
+.asla-card-media img{
+  width:100%; height:100%; object-fit:cover; transform:scale(1.03);
+  transition:transform .5s ease;
+}
+.asla-card:hover .asla-card-media img{ transform:scale(1.08); }
+.asla-card-badge{
+  position:absolute; top:12px; left:12px; width:38px; height:38px; display:grid; place-items:center;
+  border-radius:12px; background:rgba(255,255,255,.9); box-shadow:var(--shadow);
+}
+
+.asla-card-body{ padding:16px 16px 18px; display:flex; flex-direction:column; gap:10px; }
+.asla-card-body h3{ font-family:"Playfair Display",serif; font-size:1.3rem; color:var(--ink); line-height:1.2; }
+.asla-card-list{ margin-left:1.1rem; display:grid; gap:6px; color:#374151; }
+.asla-card-list li{ list-style:disc; }
+.asla-tags{ display:flex; gap:8px; flex-wrap:wrap; margin-top:4px; }
+.asla-tag{
+  background:var(--surface); color:#0f172a; border:1px solid rgba(0,0,0,.06);
+  padding:4px 10px; border-radius:999px; font-size:.85rem; font-weight:600;
+}
+
+/* ========== CTA ========== */
+.asla-cta{
+  text-align:center; background:linear-gradient(135deg, var(--brand), #006e51);
+  color:#fff; padding:4.5rem 1.5rem;
+}
+.asla-cta h2{ font-family:"Playfair Display",serif; font-size:clamp(1.6rem,2.6vw,2.2rem); margin-bottom:.6rem; }
+.asla-cta p{ max-width:760px; margin:0 auto 1.4rem; font-size:1.05rem; }
+.asla-cta .asla-btn{
+  background:linear-gradient(135deg, var(--gold), var(--gold-soft)); color:#1a1a1a;
+  padding:.9rem 2.2rem; border-radius:40px; font-weight:700;
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.asla-cta .asla-btn:hover{ transform:translateY(-2px); box-shadow:0 12px 28px rgba(0,0,0,.18); }
+
+/* ========== Accessibility ========== */
+.asla-card:focus-within{ outline:2px solid var(--gold); outline-offset:2px; }

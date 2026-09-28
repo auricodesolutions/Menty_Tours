@@ -521,7 +521,7 @@ export default function TestimonialsPage({ testimonials = DEFAULT_TESTIMONIALS }
       {/* Topbar with Back (to home testimonials section) */}
       <nav className="tm-topbar tm-reveal">
         <a href="/#testimonials" className="tm-btn tm-btn--ghost tm-btn--sm" onClick={goHomeTestimonials}>
-          ← Back to Testimonials
+          ← Back to home
         </a>
       </nav>
 

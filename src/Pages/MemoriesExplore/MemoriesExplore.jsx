@@ -236,7 +236,7 @@ export default function MemoriesExplore() {
       <div className="mexp-topbar mexp-reveal" role="navigation" aria-label="Back to memories">
         <button className="mexp-back" onClick={goBack}>
           <Icon.Back />
-          <span>Back to memories</span>
+          <span>Back to home</span>
         </button>
         <span className="mexp-count" aria-live="polite">
           {filtered.length} {filtered.length === 1 ? "memory" : "memories"}

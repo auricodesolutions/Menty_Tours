@@ -331,7 +331,7 @@ export default function QuotePage() {
         <div className="q2-hero__scrim" />
         <div className="q2-hero__inner">
           <a href="/#packages" className="q2-back" onClick={goBackToPackages}>
-            ← Back to packages
+            ← Back to home
           </a>
           <h1>Request Your Custom Quote</h1>
           <p>Share a few details and our travel expert will get back within a day.</p>

@@ -35,19 +35,7 @@ export default function Navbar() {
           <a href="/quote" className="nav-btn">Plan My Trip</a>
         </nav>
 
-        {/* 3D Sri Lankan Flag — DESKTOP (fixed to viewport right) */}
-        <a
-          className="flag-3d flag-3d--desktop animate"
-          href="https://www.srilanka.travel/"
-          title="Sri Lanka"
-          aria-label="Sri Lankan flag"
-          target="_blank"
-          rel="noreferrer"
-        >
-          <span className="flag-face">
-            <img src={flagLK} alt="Sri Lankan flag" />
-          </span>
-        </a>
+        
 
         {/* Hamburger */}
         <button
