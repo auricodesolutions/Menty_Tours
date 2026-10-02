@@ -4,6 +4,8 @@ import { Link, useSearchParams } from "react-router-dom";
 import "./ViewAllTours.css";
 import { viewURL } from "../../lib/adminApi";
 import SEO from "../../Components/Seo/SEO";
+import Navbar from "../../Components/Navbar/Navbar";
+import { FEATURED_PACKAGE } from "../../data/featuredTour";
 
 /* ===== API base ===== */
 const API_BASE =
@@ -30,12 +32,6 @@ const ArrowRight = () => (
     <path d="M12 5l7 7-7 7"></path>
   </svg>
 );
-const BackIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" stroke="currentColor" fill="none" strokeWidth="2" aria-hidden="true">
-    <path d="M15 18l-6-6 6-6" />
-  </svg>
-);
-
 /* ===== Helpers ===== */
 const FALLBACK_IMG =
   "data:image/svg+xml;utf8," +
@@ -80,9 +76,7 @@ function TourCard({ p }) {
   const placesShort = Array.isArray(p.places) ? p.places.slice(0, 3).join(" • ") : "";
   const alt = p.title + (p.duration ? ` — ${p.duration}` : "") + (placesShort ? ` — ${placesShort}` : "");
   return (
-    <article className="tp-card" itemScope itemType="https://schema.org/TouristTrip">
-      {p.best ? <span className="tp-badge">Top pick</span> : null}
-
+    <article className={`tp-card ${p.local ? "tp-card--featured" : ""}`} itemScope itemType="https://schema.org/TouristTrip">
       <div className="tp-media">
         <img
           src={resolveImg(p.img || p.hero)}
@@ -96,35 +90,34 @@ function TourCard({ p }) {
             <Clock /> {p.duration}
           </span>
         )}
+        {p.priceFrom && <span className="vt-price-seal"><small>FROM</small><strong>USD {p.priceFrom}</strong><small>{p.person === "2" ? "for 2 persons" : `per ${p.person || 1} person`}</small></span>}
       </div>
 
       <div className="tp-body">
+        {p.best ? <span className="tp-badge">Featured journey</span> : null}
         <h3 itemProp="name">{p.title}</h3>
 
         {Array.isArray(p.places) && p.places.length > 0 && (
           <div className="tp-places">
-            <MapPin /> <span itemProp="touristType">{p.places.join(" • ")}</span>
+            <MapPin /> <span itemProp="touristType">{p.places.slice(0, 3).join(" • ")}{p.places.length > 3 ? ` +${p.places.length - 3} more` : ""}</span>
           </div>
         )}
 
         {Array.isArray(p.tags) && p.tags.length > 0 && (
-          <p className="tp-card__desc">{p.tags.join(" · ")}</p>
+          <p className="tp-card__desc">{p.tags.slice(0, 3).join(" · ")}</p>
         )}
 
         <div className="tp-footer">
           <div className="tp-price" itemProp="offers" itemScope itemType="https://schema.org/Offer">
-            From{" "}
-            <strong>
-              <span itemProp="priceCurrency">USD</span>{" "}
-              <span itemProp="price">{p.priceFrom}</span>
-            </strong>{" "}
-            / {p.person} person
+            <strong>{p.priceLabel || `From USD ${p.priceFrom} / ${p.person || 1} person`}</strong>
+            <meta itemProp="priceCurrency" content="USD" />
+            <meta itemProp="price" content={p.priceFrom} />
             <meta itemProp="availability" content="https://schema.org/InStock" />
           </div>
 
           <div className="tp-actions">
             <Link className="tp-btn tp-btn--ghost" to={`/trip/${p.id || p.tourId}`} aria-label={`View ${p.title} details`}>
-              View details
+              {p.local ? "View itinerary" : "View details"}
             </Link>
 
             <Link
@@ -160,11 +153,11 @@ export default function ViewAllTours() {
   const catParam = searchParams.get("cat") || "All";
   const sortParam = searchParams.get("sort") || "popular";
 
-  const [data, setData] = useState([]);
+  const [data, setData] = useState([FEATURED_PACKAGE]);
   const [q, setQ] = useState(qParam);
   const [cat, setCat] = useState(catParam);
   const [sort, setSort] = useState(sortParam);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
   const [visible, setVisible] = useState(12);
 
@@ -188,14 +181,13 @@ export default function ViewAllTours() {
 
     (async () => {
       try {
-        setLoading(true);
         const res = await fetch(`${API_BASE}/api/tours`, { signal: ctrl.signal });
         const json = await res.json().catch(() => ({}));
         if (!alive) return;
 
         if (json?.ok !== true || !Array.isArray(json?.data)) {
-          setErr(json?.error || "Failed to load tours.");
-          setData([]);
+          setErr("");
+          setData([FEATURED_PACKAGE]);
         } else {
           const cleaned = json.data.map((p) => ({
             ...p,
@@ -204,10 +196,13 @@ export default function ViewAllTours() {
             itinerary: cleanItinerary(p.itinerary),
           }));
           setErr("");
-          setData(cleaned);
+          setData([FEATURED_PACKAGE, ...cleaned.filter((tour) => (tour.id || tour.tourId) !== FEATURED_PACKAGE.id)]);
         }
       } catch (e) {
-        if (alive && e.name !== "AbortError") setErr(e.message || "Network error");
+        if (alive && e.name !== "AbortError") {
+          setErr("");
+          setData([FEATURED_PACKAGE]);
+        }
       } finally {
         alive && setLoading(false);
       }
@@ -255,6 +250,7 @@ export default function ViewAllTours() {
 
   const shown = filtered.slice(0, visible);
   const canLoadMore = shown.length < filtered.length;
+  const showToolbar = data.length > 1 || Boolean(q) || cat !== "All" || sort !== "popular";
 
   useEffect(() => setVisible(12), [q, cat, sort]);
 
@@ -343,6 +339,7 @@ export default function ViewAllTours() {
 
   return (
     <>
+      <Navbar forceDark />
       <SEO
         title={title}
         description={description}
@@ -356,17 +353,11 @@ export default function ViewAllTours() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJSON) }} />
 
       <main className="vt">
-        <nav className="vt-topbar">
-          <Link to="/" className="vt-back">
-            <BackIcon /> Back
-          </Link>
-          <h1 className="vt-title">All Sri Lanka Tours</h1>
-          <div className="vt-count" aria-live="polite">
-            {filtered.length} {filtered.length === 1 ? "tour" : "tours"}
-          </div>
-        </nav>
-
-        <section className="vt-toolbar" ref={barRef}>
+        <header className="vt-page-intro">
+          <h1>Tour packages</h1>
+          <p>Thoughtfully planned Sri Lanka journeys.</p>
+        </header>
+        {showToolbar && <section className="vt-toolbar" ref={barRef}>
           <div className="vt-row">
             <input
               className="vt-input"
@@ -400,7 +391,7 @@ export default function ViewAllTours() {
               </button>
             ))}
           </div>
-        </section>
+        </section>}
 
         {loading && (
           <section className="vt-grid" aria-busy="true" aria-live="polite">
@@ -408,7 +399,7 @@ export default function ViewAllTours() {
               <article className="tp-card tp-card--skeleton" key={`sk-${i}`}>
                 <div className="tp-media skeleton-block" />
                 <div className="tp-body">
-                  <h3 className="skeleton-line" />
+                  <div className="skeleton-line" />
                   <div className="skeleton-line" />
                   <p className="skeleton-line" />
                   <div className="tp-footer">
@@ -434,7 +425,7 @@ export default function ViewAllTours() {
 
         {!loading && !err && filtered.length > 0 && (
           <>
-            <section className="vt-grid">
+            <section className={`vt-grid ${data.length === 1 ? "vt-grid--single" : ""}`} aria-label="Tour packages">
               {shown.map((p) => (
                 <TourCard key={p.tourId ?? p.id} p={p} />
               ))}

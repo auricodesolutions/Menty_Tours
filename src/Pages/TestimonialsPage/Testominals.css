@@ -27,6 +27,9 @@
     var(--tm-bg);
 }
 
+/* Menty Tours light review page refresh */
+.tm{--tm-navy:#0b2238;--tm-gold:#e9b84f;max-width:none!important;padding:0 5vw 90px!important;color:var(--tm-navy)!important;background:#f8f5ee!important}.tm-topbar{max-width:1180px;margin:0 auto!important;padding:28px 0!important}.tm-hero{max-width:900px;margin:0 auto!important;padding:58px 20px 48px!important;text-align:center}.tm-hero-badge{color:#9a6b16!important;background:rgba(233,184,79,.16)!important}.tm-hero h1{font-family:Georgia,"Times New Roman",serif!important;font-size:clamp(44px,6vw,78px)!important;line-height:1.02!important;letter-spacing:-.025em!important}.tm-sub{max-width:700px!important;margin:20px auto!important;color:#5c6874!important;line-height:1.7!important}.tm-chip{border-color:rgba(11,34,56,.1)!important;color:#45576a!important;background:#fff!important}.tm-controls,.tm-all{max-width:1180px;margin-right:auto!important;margin-left:auto!important}.tm-controls{border:1px solid rgba(11,34,56,.08)!important;border-radius:18px!important;background:#fff!important;box-shadow:0 16px 45px rgba(11,34,56,.06)!important}.tm-input,.tm-selects select{border-color:#d8dde1!important;color:var(--tm-navy)!important;background:#fbfbf9!important}.tm-all-head h2{font-family:Georgia,"Times New Roman",serif!important;color:var(--tm-navy)!important;font-size:clamp(30px,4vw,48px)!important}.tm-grid{gap:22px!important}.tm-card{border:1px solid rgba(11,34,56,.09)!important;border-radius:18px!important;background:#fff!important;box-shadow:0 16px 42px rgba(11,34,56,.07)!important}.tm-card::before{background:var(--tm-gold)!important}.tm-stars,.tm-star.active{color:var(--tm-gold)!important}.tm-btn{border-color:var(--tm-gold)!important;color:var(--tm-navy)!important;background:var(--tm-gold)!important}.tm-btn--ghost{border-color:rgba(11,34,56,.18)!important;background:#fff!important}.tm-write-page-cta{display:flex;max-width:1180px;align-items:center;justify-content:space-between;gap:32px;margin:64px auto 0;padding:42px clamp(28px,5vw,62px);border-radius:22px;color:#fff;background:#0b2238}.tm-write-page-cta>div>span{color:#e9b84f;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}.tm-write-page-cta h2{margin:10px 0 8px;font-family:Georgia,"Times New Roman",serif;font-size:clamp(30px,4vw,48px)}.tm-write-page-cta p{margin:0;color:#c6d0d8}.tm-write-page-cta .tm-btn{flex:0 0 auto;text-decoration:none}@media(max-width:700px){.tm{padding:0 18px 60px!important}.tm-write-page-cta{align-items:flex-start;flex-direction:column}.tm-write-page-cta .tm-btn{width:100%;justify-content:center}}
+
 /* Reset bits so images don’t break layout on mobile */
 .tm *, .tm *::before, .tm *::after{ box-sizing:border-box; }
 .tm img{ display:block; max-width:100%; height:auto; }
@@ -186,3 +189,139 @@
 .tm-check{ display:flex; gap:8px; align-items:flex-start; font-size:14px; color:var(--tm-ink-dim); }
 .tm-error{ color:#b00020; margin:6px 0; }
 .tm-success{ color:#106a2c; margin:6px 0; }
+
+/* Guest stories page: match the Menty Tours cream, forest and gold palette. */
+.tm {
+  padding: 64px clamp(20px, 4vw, 64px) 88px !important;
+  background: #f8f5ee !important;
+}
+
+.tm-hero {
+  max-width: 1180px;
+  padding: clamp(72px, 8vw, 118px) 0 58px !important;
+  text-align: left;
+  border-bottom: 1px solid rgba(13, 48, 47, .14);
+}
+
+.tm-hero-badge {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  background: transparent !important;
+  color: #aa731e !important;
+  font-size: .8rem;
+  font-weight: 800;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+}
+
+.tm-hero h1 {
+  max-width: 800px;
+  margin: 16px 0 20px;
+  color: #0b2930;
+  font-size: clamp(42px, 5.5vw, 72px) !important;
+  line-height: 1.07 !important;
+}
+
+.tm-hero .tm-sub {
+  max-width: 660px !important;
+  margin: 0 !important;
+  color: #50646a !important;
+  font-size: clamp(17px, 1.7vw, 20px);
+}
+
+.tm-hero-stats {
+  justify-content: flex-start;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.tm-chip {
+  padding: 9px 15px;
+  border-color: rgba(13, 48, 47, .14) !important;
+  border-radius: 10px;
+  background: #fffdf9 !important;
+  color: #34534e !important;
+  font-size: .83rem;
+}
+
+.tm-all {
+  max-width: 1180px;
+  margin: 52px auto 0 !important;
+  padding: 0;
+}
+
+.tm-all-head {
+  align-items: end;
+  gap: 20px;
+  margin-bottom: 24px;
+}
+
+.tm-all-head h2 {
+  color: #0b2930 !important;
+  font-size: clamp(30px, 3.4vw, 44px) !important;
+}
+
+.tm-all-meta {
+  color: #56716d;
+  white-space: nowrap;
+}
+
+.tm-grid {
+  gap: 20px !important;
+}
+
+.tm-card {
+  gap: 16px;
+  padding: clamp(22px, 2.5vw, 30px);
+  border-color: rgba(13, 48, 47, .12) !important;
+  background: #fffdf9 !important;
+  box-shadow: 0 14px 38px rgba(11, 41, 48, .06) !important;
+}
+
+.tm-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 22px 45px rgba(11, 41, 48, .11) !important;
+}
+
+.tm-avatar {
+  border-radius: 50%;
+}
+
+.tm-avatar--placeholder {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: #e9b84f;
+  color: #0b2930;
+  font-family: Georgia, serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.tm-card-quote {
+  margin: 0;
+  color: #263f42;
+  font-size: 1.03rem;
+}
+
+.tm-link {
+  color: #176b61;
+}
+
+.tm-write-page-cta {
+  background: linear-gradient(115deg, #0a2334, #143f39);
+}
+
+@media (min-width: 980px) {
+  .tm-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 700px) {
+  .tm { padding: 64px 18px 60px !important; }
+  .tm-hero { padding: 58px 0 38px !important; }
+  .tm-hero h1 { font-size: clamp(38px, 10vw, 54px) !important; }
+  .tm-all { margin-top: 36px !important; }
+  .tm-all-head { align-items: flex-start; flex-direction: column; gap: 4px; }
+}

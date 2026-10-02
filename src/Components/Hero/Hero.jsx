@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import "./Hero.css";
 import heroVideo from "../../assets/hero.mp4";
 import flagLK from "../../assets/sri-lanka-flag.svg";
-import { Palmtree, MapPin, Compass } from "lucide-react";
 import Loader from "../Loader/Loader";
 
 export default function Hero() {
@@ -59,7 +58,7 @@ export default function Hero() {
   }, []);
 
   return (
-    <section id="hero" ref={root} className="hero hero--center" aria-label="Sri Lanka hero">
+    <section id="hero" ref={root} className="hero" aria-label="Sri Lanka hero">
       {loading && <Loader />}
 
       <video
@@ -75,33 +74,30 @@ export default function Hero() {
 
       <div className="container hero__frame">
         <div className="hero__content">
-          {/* Eyebrow pill with tiny flag (wraps nicely on mobile) */}
           <p
             className="eyebrow"
-            role="text"
-            aria-label="Sri Lanka — Authentic & Tailor-Made"
+            aria-label="Authentic, tailor-made Sri Lanka journeys"
           >
             <img src={flagLK} alt="" className="flag-mini" aria-hidden="true" />
             <span className="eyebrow__text">
-              Sri Lanka • Authentic &amp; Tailor&#8209;Made
+              Authentic journeys, made for you
             </span>
           </p>
 
-          <h1 className="hero__title">Where Wonders Await</h1>
+          <h1 className="hero__title">
+            <span className="hero__title-script">Explore</span>
+            <span className="hero__title-main">SRI LANKA <em>YOUR WAY</em></span>
+          </h1>
           <p className="hero__subtitle">
-            Your journey, your pace ,curated stays, epic views, and real local experiences.
+            Private journeys, local guides, and unforgettable places—all designed around you.
           </p>
 
-          <ul className="hero__chips" aria-label="Highlights">
-            <li><Compass size={22} strokeWidth={1.8} /> Local Guides</li>
-            <li><Palmtree size={22} strokeWidth={1.8} /> Tropical Escapes</li>
-            <li><MapPin size={22} strokeWidth={1.8} /> Hidden Destinations</li>
-          </ul>
-
           <div className="cta">
-            <a className="btn btn--gold" href="#packages">Explore Tours →</a>
+            <a className="btn btn--gold" href="/tours">Explore Tours →</a>
             <a className="btn btn--ghost" href="/quote">Request a Quote</a>
           </div>
+
+
         </div>
       </div>
     </section>

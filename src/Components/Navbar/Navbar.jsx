@@ -1,38 +1,71 @@
 import React, { useState, useEffect } from "react";
 import "./Navbar.css";
-import logo from "../../assets/logo.png";
-import flagLK from "../../assets/sri-lanka-flag.svg";
+import logo from "../../assets/menty-tours-logo.png";
 
-export default function Navbar() {
+export default function Navbar({ forceDark = false }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const onScroll = () => {
+      const root = document.getElementById("root");
+      const heroTop = document.getElementById("hero")?.getBoundingClientRect().top ?? 0;
+      const scrollTop = Math.max(
+        window.scrollY || 0,
+        document.documentElement.scrollTop || 0,
+        document.body.scrollTop || 0,
+        root?.scrollTop || 0
+      );
+      setScrolled(scrollTop > 20 || heroTop < -20);
+    };
+
+    const scrollTargets = [window, document, document.documentElement, document.body];
+    onScroll();
+    scrollTargets.forEach((target) =>
+      target.addEventListener("scroll", onScroll, { passive: true, capture: true })
+    );
+    window.addEventListener("resize", onScroll, { passive: true });
+
+    return () => {
+      scrollTargets.forEach((target) =>
+        target.removeEventListener("scroll", onScroll, { capture: true })
+      );
+      window.removeEventListener("resize", onScroll);
+    };
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "auto";
+    if (!menuOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
   }, [menuOpen]);
 
   return (
-    <header className={`navbar ${scrolled ? "scrolled" : ""}`}>
+    <header className={`navbar ${scrolled || forceDark ? "scrolled" : ""}`}>
       <div className="nav-container">
         {/* Logo */}
         <a href="/" className="nav-logo">
-          <img src={logo} alt="Menty Tours" />
-          <span>MENTY TOURS</span>
+          <span className="nav-logo__mark" aria-hidden="true">
+            <img src={logo} alt="" />
+          </span>
+          <span className="nav-logo__name">MENTY TOURS</span>
         </a>
 
         {/* Desktop links */}
         <nav className="nav-links">
-          <a href="#hero">Home</a>
-          <a href="#packages">Packages</a>
-          <a href="#memories">Memories</a>
-          <a href="#contact">Contact Us</a>
-          <a href="/quote" className="nav-btn">Plan My Trip</a>
+          <a href="/">Home</a>
+          <a href="/tours">Packages</a>
+          <a href="/about-us">About Us</a>
+          <a href="/#contact">Contact Us</a>
+          <a href="/quote" className="nav-btn">
+            <span>Plan My Trip</span>
+            <span className="nav-btn__icon" aria-hidden="true">↗</span>
+          </a>
         </nav>
 
         
@@ -56,7 +89,7 @@ export default function Navbar() {
         <div className={`mobile-drawer ${menuOpen ? "open" : ""}`}>
           <div className="drawer-header">
             <a href="/" className="drawer-logo" onClick={() => setMenuOpen(false)}>
-              <img src={logo} alt="Menty Tours" />
+              <img src={logo} alt="" aria-hidden="true" />
               <span>MENTY TOURS</span>
             </a>
             <button
@@ -69,11 +102,11 @@ export default function Navbar() {
           </div>
 
           <nav className="drawer-links">
-            <a href="#hero" onClick={() => setMenuOpen(false)}>Home</a>
+            <a href="/" onClick={() => setMenuOpen(false)}>Home</a>
             <a href="#services" onClick={() => setMenuOpen(false)}>Services</a>
-            <a href="#packages" onClick={() => setMenuOpen(false)}>Packages</a>
-            <a href="#memories" onClick={() => setMenuOpen(false)}>Memories</a>
-            <a href="#contact" onClick={() => setMenuOpen(false)}>Contact Us</a>
+            <a href="/tours" onClick={() => setMenuOpen(false)}>Packages</a>
+            <a href="/about-us" onClick={() => setMenuOpen(false)}>About Us</a>
+            <a href="/#contact" onClick={() => setMenuOpen(false)}>Contact Us</a>
             <a href="/quote" className="drawer-btn" onClick={() => setMenuOpen(false)}>
               Plan My Trip
             </a>

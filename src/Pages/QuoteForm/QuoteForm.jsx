@@ -248,14 +248,8 @@ export default function QuotePage() {
   ];
 
   const goBackToPackages = (e) => {
-    const el = document.getElementById("packages");
-    if (el) {
-      e.preventDefault();
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-      try { window.history.replaceState(null, "", "#packages"); } catch {}
-    } else {
-      window.location.href = "/#packages";
-    }
+    e.preventDefault();
+    window.location.href = "/tours";
   };
 
   const progress = (step / totalSteps) * 100;
@@ -330,8 +324,8 @@ export default function QuotePage() {
         />
         <div className="q2-hero__scrim" />
         <div className="q2-hero__inner">
-          <a href="/#packages" className="q2-back" onClick={goBackToPackages}>
-            ← Back to home
+          <a href="/tours" className="q2-back" onClick={goBackToPackages}>
+            ← Back to tours
           </a>
           <h1>Request Your Custom Quote</h1>
           <p>Share a few details and our travel expert will get back within a day.</p>

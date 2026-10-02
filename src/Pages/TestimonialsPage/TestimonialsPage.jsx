@@ -2,6 +2,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import "./Testominals.css";
 import SEO from "../../Components/Seo/SEO.jsx";
+import Navbar from "../../Components/Navbar/Navbar";
+import JourneyIntro from "../../Components/JourneyIntro/JourneyIntro";
 
 /* ===== API base ===== */
 const API_BASE =
@@ -83,7 +85,7 @@ function ReviewCard({ t }) {
             decoding="async"
           />
         ) : (
-          <div className="tm-avatar tm-avatar--placeholder" aria-hidden="true" />
+          <div className="tm-avatar tm-avatar--placeholder" aria-hidden="true">{t.name?.charAt(0) || "G"}</div>
         )}
         <div className="tm-nameRow">
           <strong itemProp="author">{t.name}</strong>
@@ -353,7 +355,7 @@ function AllReviewsGrid({ items = [] }) {
       </div>
 
       {items.length === 0 ? (
-        <p className="tm-empty">No reviews match your search & filters.</p>
+        <p className="tm-empty">No guest stories are available yet. Be the first to share your journey.</p>
       ) : (
         <>
           <div className="tm-grid">
@@ -380,20 +382,18 @@ function AllReviewsGrid({ items = [] }) {
 /* ===== PAGE ===== */
 export default function TestimonialsPage({ testimonials = DEFAULT_TESTIMONIALS }) {
   const [data, setData] = useState(testimonials);
-  const [err, setErr] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [apiLoaded, setApiLoaded] = useState(false);
 
   // Load from API
   useEffect(() => {
     let alive = true;
     (async () => {
-      setLoading(true);
-      setErr("");
       try {
         const res = await fetch(`${API_BASE}/api/testimonials?limit=200&sort=recent`);
         const json = await res.json().catch(() => ({}));
         if (!alive) return;
         if (res.ok && json?.ok && Array.isArray(json.data)) {
+          setApiLoaded(true);
           setData(
             json.data.map((r) => ({
               name: r.name,
@@ -406,13 +406,9 @@ export default function TestimonialsPage({ testimonials = DEFAULT_TESTIMONIALS }
               photo: r.photo || null,
             }))
           );
-        } else {
-          setErr(json?.error || "Could not load reviews.");
         }
       } catch (e) {
-        if (alive) setErr(e.message || "Network error");
-      } finally {
-        alive && setLoading(false);
+        // Keep the guest stories already on the page when the API is unavailable.
       }
     })();
     return () => {
@@ -426,41 +422,16 @@ export default function TestimonialsPage({ testimonials = DEFAULT_TESTIMONIALS }
     return { avg: Math.round((sum / data.length) * 10) / 10, count: data.length };
   }, [data]);
 
-  const [q, setQ] = useState("");
-  const [minRating, setMinRating] = useState(0);
-  const [sortBy, setSortBy] = useState("recent");
-
-  const filtered = useMemo(() => {
-    let rows = data
-      .filter((t) => (Number(t.rating) || 0) >= minRating)
-      .filter((t) => {
-        const needle = q.trim().toLowerCase();
-        if (!needle) return true;
-        const hay = `${t.name} ${t.country} ${t.trip} ${t.text}`.toLowerCase();
-        return hay.includes(needle);
-      });
-    if (sortBy === "top") rows = [...rows].sort((a, b) => (a.rating < b.rating ? 1 : -1));
-    else rows = [...rows].sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    return rows;
-  }, [data, q, minRating, sortBy]);
-
-  // Re-run reveal when content count changes or loading flips
-  useReveal(".tm-reveal", 0.16, [loading, filtered.length]);
-
-  /* Back button → home testimonials section */
-  const goHomeTestimonials = (e) => {
-    e?.preventDefault?.();
-    window.location.assign("/#testimonials");
-  };
+  useReveal(".tm-reveal", 0.16, [data.length]);
 
   // ======== Page-level SEO ========
   const pageUrl = "https://www.mentytours.com/testimonials";
   const seo = {
     title: "Menty Tours Reviews & Testimonials | Sri Lanka Tour Reviews",
     description:
-      count > 0
-        ? `Read ${count}+ verified Menty Tours reviews — rated ${avg}/5 for private drivers, custom itineraries, and Colombo airport pickup. Real experiences across Sigiriya, Kandy, Ella, Yala & more.`
-        : "Read verified Menty Tours reviews from real travelers. Private drivers, custom itineraries, and Colombo airport pickup for Sri Lanka tours.",
+      apiLoaded && count > 0
+        ? `Read ${count} Menty Tours guest reviews — rated ${avg}/5 for private drivers and tailor-made Sri Lanka journeys.`
+        : "Read Menty Tours guest stories and discover personal Sri Lanka journeys, friendly guides, and tailor-made itineraries.",
     canonical: pageUrl,
     ogImage: "https://www.mentytours.com/og-cover.jpg",
   };
@@ -474,14 +445,14 @@ export default function TestimonialsPage({ testimonials = DEFAULT_TESTIMONIALS }
     "url": "https://www.mentytours.com/",
     "logo": "https://www.mentytours.com/logo-mark.png",
     "image": "https://www.mentytours.com/og-cover.jpg",
-    "aggregateRating": {
+    ...(apiLoaded && count > 0 ? { "aggregateRating": {
       "@type": "AggregateRating",
       "ratingValue": avg || 0,
       "reviewCount": count || 0,
       "bestRating": 5,
       "worstRating": 1
-    },
-    "review": data.slice(0, 20).map((t, i) => ({
+    }} : {}),
+    "review": (apiLoaded ? data : []).slice(0, 20).map((t, i) => ({
       "@type": "Review",
       "author": t.name,
       "reviewBody": t.text,
@@ -512,75 +483,29 @@ export default function TestimonialsPage({ testimonials = DEFAULT_TESTIMONIALS }
   };
 
   return (
+    <>
+    <Navbar forceDark />
     <main className="tm">
       <SEO {...seo} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJSON) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJSON) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJSON) }} />
 
-      {/* Topbar with Back (to home testimonials section) */}
-      <nav className="tm-topbar tm-reveal">
-        <a href="/#testimonials" className="tm-btn tm-btn--ghost tm-btn--sm" onClick={goHomeTestimonials}>
-          ← Back to home
-        </a>
-      </nav>
-
-      <header className="tm-hero tm-reveal">
-        <div className="tm-hero-badge">Trusted by travelers worldwide</div>
-        <h1>Menty Tours reviews & testimonials</h1>
-        <p className="tm-sub">
-          {count > 0 ? (
-            <>Rated <strong>{avg}/5</strong> from <strong>{count}</strong> verified reviews — real Sri Lanka tour experiences across Sigiriya, Kandy, Ella, Yala, Mirissa & more.</>
-          ) : (
-            <>Real Sri Lanka tour experiences from our guests — private drivers, tailor-made itineraries, and on-time airport pickup from Colombo.</>
-          )}
-        </p>
-        <div className="tm-hero-stats" aria-hidden="true">
-          <div className="tm-chip">Friendly guides</div>
-          <div className="tm-chip">Clean vehicles</div>
-          <div className="tm-chip">On-time pickups</div>
-          <div className="tm-chip">Safe & comfy</div>
-        </div>
-      </header>
-
-      {err && <p style={{ textAlign: "center", color: "#c00" }}>{err}</p>}
-
-      {/* Filters */}
-      <section className="tm-controls tm-reveal" aria-label="Filter reviews">
-        <input
-          className="tm-input"
-          type="search"
-          placeholder="Search by name, country, or trip…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-          aria-label="Search reviews"
-        />
-        <div className="tm-selects">
-          <label className="tm-field">
-            <span>Min rating</span>
-            <select value={minRating} onChange={(e) => setMinRating(Number(e.target.value))} aria-label="Minimum rating">
-              <option value={0}>All</option>
-              <option value={5}>5 ★</option>
-              <option value={4.5}>4.5 ★</option>
-              <option value={4}>4 ★</option>
-              <option value={3.5}>3.5 ★</option>
-            </select>
-          </label>
-          <label className="tm-field">
-            <span>Sort</span>
-            <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} aria-label="Sort reviews">
-              <option value="recent">Most recent</option>
-              <option value="top">Top rated</option>
-            </select>
-          </label>
-        </div>
-      </section>
+      <JourneyIntro />
 
       {/* All reviews */}
-      {!loading && <AllReviewsGrid items={filtered} />}
+      <div id="guest-reviews"><AllReviewsGrid items={data} /></div>
 
-      <WriteReview onSubmit={(review) => setData((prev) => [review, ...prev])} />
+      <section className="tm-write-page-cta tm-reveal">
+        <div>
+          <span>Traveled with Menty Tours?</span>
+          <h2>Share your Sri Lanka story</h2>
+          <p>Your honest experience helps future guests travel with confidence.</p>
+        </div>
+        <a className="tm-btn" href="/write-review">Write a review →</a>
+      </section>
     </main>
+    </>
   );
 }
 
@@ -594,7 +519,7 @@ const DEFAULT_TESTIMONIALS = [
     text:
       "From the first WhatsApp message to our airport drop-off, everything was seamless. Our guide Kasun felt like family—patient, funny, and so knowledgeable. We loved Sigiriya sunrise, Ella train, and a surprise coconut! Highly recommend.",
     date: "2025-08-14",
-    avatar: "https://i.pravatar.cc/80?img=11",
+    avatar: "",
     photo: null,
   },
   {
@@ -605,7 +530,8 @@ const DEFAULT_TESTIMONIALS = [
     text:
       "Clean car, smooth driving, and flexible planning. We added Yala at the last minute and they handled it perfectly. The hotel picks were spot on for our budget.",
     date: "2025-07-02",
-    avatar: "https://i.pravatar.cc/80?img=12",
+    avatar: "",
     photo: null,
   },
 ];
+

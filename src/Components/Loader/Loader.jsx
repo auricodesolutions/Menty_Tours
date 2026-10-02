@@ -1,6 +1,6 @@
 import React from "react";
 import "./Loader.css";
-import logo from "../../assets/logo.png"; // ✅ replace with your logo path
+import logo from "../../assets/menty-tours-logo.png";
 
 export default function Loader() {
   return (

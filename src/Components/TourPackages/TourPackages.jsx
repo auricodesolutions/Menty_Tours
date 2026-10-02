@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./TourPackages.css";
 import { viewURL } from "../../lib/adminApi"; // shared URL resolver
+import { FEATURED_PACKAGE } from "../../data/featuredTour";
 
 const API_BASE =
   (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
@@ -75,7 +76,7 @@ function useMediaQuery(query) {
 }
 
 /* card component (shared by grid + carousel) */
-function PackageCard({ p }) {
+function PackageCard({ p, onDetails }) {
   return (
     <article className="tp-card">
       {p.best ? <span className="tp-badge">Top pick</span> : null}
@@ -108,14 +109,14 @@ function PackageCard({ p }) {
         )}
 
         <div className="tp-footer">
-          <div className="tp-price">
-            From <strong>USD {p.priceFrom}</strong> / {p.person} person
-          </div>
+          <div className="tp-price">{p.priceLabel ? <strong>{p.priceLabel}</strong> : <>From <strong>USD {p.priceFrom}</strong> / {p.person} person</>}</div>
 
           <div className="tp-actions">
-            <Link className="tp-btn tp-btn--ghost" to={`/trip/${p.id || p.tourId}`}>
-              View details
-            </Link>
+            {p.local ? (
+              <button className="tp-btn tp-btn--ghost" type="button" onClick={() => onDetails(p)}>View itinerary</button>
+            ) : (
+              <Link className="tp-btn tp-btn--ghost" to={`/trip/${p.id || p.tourId}`}>View details</Link>
+            )}
 
             <Link
               className="tp-btn tp-btn--gold"
@@ -142,12 +143,40 @@ function PackageCard({ p }) {
   );
 }
 
+function PackageModal({ tour, onClose }) {
+  useEffect(() => {
+    if (!tour) return undefined;
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    const keydown = (event) => event.key === "Escape" && onClose();
+    window.addEventListener("keydown", keydown);
+    return () => { document.body.style.overflow = previous; window.removeEventListener("keydown", keydown); };
+  }, [tour, onClose]);
+  if (!tour) return null;
+  return (
+    <div className="tp-modal" role="dialog" aria-modal="true" aria-labelledby="tp-modal-title" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <div className="tp-modal__panel">
+        <button className="tp-modal__close" type="button" onClick={onClose} aria-label="Close itinerary">×</button>
+        <div className="tp-modal__hero">
+          <img src={resolveImg(tour.img)} alt="Sigiriya landscape" />
+          <div><span>Signature private tour</span><h2 id="tp-modal-title">{tour.title}</h2><p>{tour.duration} · {tour.priceLabel}</p></div>
+        </div>
+        <div className="tp-modal__content">
+          <section><h3>Your day-by-day journey</h3><div className="tp-timeline">{tour.itinerary.map((day, index) => <article key={day.title}><span>{index + 1}</span><div><h4>{day.title}</h4><p>{day.desc}</p></div></article>)}</div></section>
+          <aside><h3>Tour inclusions</h3><ul>{tour.inclusions.map((item) => <li key={item}><span>✓</span>{item}</li>)}</ul><Link className="tp-btn tp-btn--gold tp-modal__quote" to="/quote" state={{ pkg: tour }}>Book this journey <ArrowRight /></Link></aside>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 /* main */
 export default function TourPackages() {
   const [cat, setCat] = useState("All");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [selectedTour, setSelectedTour] = useState(null);
 
   useEffect(() => {
     let alive = true;
@@ -174,8 +203,8 @@ export default function TourPackages() {
         if (!alive) return;
 
         if (json?.ok !== true || !Array.isArray(json?.data)) {
-          setError(json?.error || "Failed to load tour packages.");
-          setData([]);
+          setError("");
+          setData([FEATURED_PACKAGE]);
         } else {
           const cleaned = json.data.map((p) => ({
             ...p,
@@ -183,13 +212,13 @@ export default function TourPackages() {
             tags: cleanUnique(p.tags),
             itinerary: cleanItinerary(p.itinerary),
           }));
-          setData(cleaned);
+          setData([FEATURED_PACKAGE, ...cleaned.filter((tour) => (tour.id || tour.tourId) !== FEATURED_PACKAGE.id)]);
           setError("");
         }
       } catch (e) {
         if (alive && e.name !== "AbortError") {
-          setError(e.message || "Network error");
-          setData([]);
+          setError("");
+          setData([FEATURED_PACKAGE]);
         }
       } finally {
         alive && setLoading(false);
@@ -251,7 +280,7 @@ export default function TourPackages() {
               <article className="tp-card tp-card--skeleton" key={`sk-${i}`}>
                 <div className="tp-media skeleton-block" />
                 <div className="tp-body">
-                  <h3 className="skeleton-line" />
+                  <div className="skeleton-line" aria-hidden="true" />
                   <div className="skeleton-line" />
                   <p className="skeleton-line" />
                   <div className="tp-footer">
@@ -281,7 +310,7 @@ export default function TourPackages() {
                 <div className="tp-hscroll" ref={scrollRef}>
                   {filtered.map((p) => (
                     <div className="tp-slide" key={p.tourId ?? p.id}>
-                      <PackageCard p={p} />
+                      <PackageCard p={p} onDetails={setSelectedTour} />
                     </div>
                   ))}
                 </div>
@@ -298,7 +327,7 @@ export default function TourPackages() {
             ) : (
               <div className="tp-grid">
                 {topEight.map((p) => (
-                  <PackageCard key={p.tourId ?? p.id} p={p} />
+                  <PackageCard key={p.tourId ?? p.id} p={p} onDetails={setSelectedTour} />
                 ))}
               </div>
             )}
@@ -312,6 +341,7 @@ export default function TourPackages() {
           </>
         )}
       </div>
+      <PackageModal tour={selectedTour} onClose={() => setSelectedTour(null)} />
     </section>
   );
 }

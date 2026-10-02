@@ -10,20 +10,13 @@ import food from "../../assets/food.jpg";
 
 export default function OurIsland() {
   useEffect(() => {
-    const els = document.querySelectorAll(".island-reveal");
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting) {
-            e.target.classList.add("show");
-            io.unobserve(e.target);
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+    const elements = document.querySelectorAll(".island-reveal");
+    if (!("IntersectionObserver" in window)) { elements.forEach((element) => element.classList.add("show")); return undefined; }
+    const observer = new IntersectionObserver((entries) => entries.forEach((entry) => {
+      if (entry.isIntersecting) { entry.target.classList.add("show"); observer.unobserve(entry.target); }
+    }), { threshold: 0.15 });
+    elements.forEach((element) => observer.observe(element));
+    return () => observer.disconnect();
   }, []);
 
   const categories = [
@@ -38,53 +31,18 @@ export default function OurIsland() {
   return (
     <section className="island-section" id="our-island" aria-label="Our Island Sri Lanka">
       <div className="island-container">
-        <header className="island-head island-reveal">
-          <h2>Our Island</h2>
-          <p className="sub">Sri Lanka</p>
-        </header>
-
+        <header className="island-head island-reveal"><span>Discover Sri Lanka</span><h2>Our Island</h2><p>Sri Lanka</p></header>
         <div className="island-grid island-reveal">
-          {/* Left side (Desktop view) */}
           <div className="island-side desktop-only">
-            {categories.slice(0, 3).map((c, i) => (
-              <div className="island-card" key={i}>
-                <div className="island-circle">
-                  <img src={c.img} alt={c.title} loading="lazy" />
-                </div>
-                <h4>{c.title}</h4>
-              </div>
-            ))}
+            {categories.slice(0, 3).map((category) => <article className="island-card" key={category.title}><div className="island-circle"><img src={category.img} alt={category.title} loading="lazy" /></div><h3>{category.title}</h3></article>)}
           </div>
-
-          {/* Map in the center */}
-          <div className="island-map">
-            <div className="island-map-glow"></div>
-            <img src={mapImg} alt="Sri Lanka Map" />
-          </div>
-
-          {/* Right side (Desktop view) */}
+          <div className="island-map"><div className="island-map-glow" /><img src={mapImg} alt="Illustrated travel map of Sri Lanka" /></div>
           <div className="island-side desktop-only">
-            {categories.slice(3).map((c, i) => (
-              <div className="island-card" key={i}>
-                <h4>{c.title}</h4>
-                <div className="island-circle">
-                  <img src={c.img} alt={c.title} loading="lazy" />
-                </div>
-              </div>
-            ))}
+            {categories.slice(3).map((category) => <article className="island-card island-card--right" key={category.title}><h3>{category.title}</h3><div className="island-circle"><img src={category.img} alt={category.title} loading="lazy" /></div></article>)}
           </div>
         </div>
-
-        {/* Mobile carousel under the map */}
         <div className="island-carousel mobile-only">
-          {categories.map((c, i) => (
-            <div className="island-card" key={i}>
-              <div className="island-circle">
-                <img src={c.img} alt={c.title} loading="lazy" />
-              </div>
-              <h4>{c.title}</h4>
-            </div>
-          ))}
+          {categories.map((category) => <article className="island-card" key={category.title}><div className="island-circle"><img src={category.img} alt={category.title} loading="lazy" /></div><h3>{category.title}</h3></article>)}
         </div>
       </div>
     </section>

@@ -5,6 +5,7 @@ import "./TripDetails.css";
 import { Landmark, Plane, Car, Sun } from "lucide-react";
 import { viewURL } from "../../lib/adminApi";
 import SEO from "../../Components/Seo/SEO.jsx";
+import { FEATURED_PACKAGE } from "../../data/featuredTour";
 
 // --- API base (Vite or CRA env); fallback to backend port ---
 const API_BASE =
@@ -53,6 +54,13 @@ export default function TripDetails() {
   const [err, setErr] = useState("");
 
   useEffect(() => {
+    if (id === FEATURED_PACKAGE.id) {
+      setTrip(FEATURED_PACKAGE);
+      setLoading(false);
+      setErr("");
+      window.scrollTo(0, 0);
+      return undefined;
+    }
     let alive = true;
     const ctrl = new AbortController();
 
@@ -276,8 +284,9 @@ export default function TripDetails() {
 
       {/* Overview */}
       <div className="trip-intro reveal">
-        <h2>Discover Sri Lanka’s Beauty</h2>
+        <h2>Your Sri Lanka journey</h2>
         <p className="trip-description">{overviewText}</p>
+        {trip.priceLabel && <p className="trip-package-price">{trip.priceLabel}</p>}
 
         <ul className="trip-tags" aria-label="Trip themes">
           {(trip.tags?.length ? trip.tags : ["Heritage", "Local Experiences", "Private Transport", "Scenic Views"])
@@ -309,7 +318,9 @@ export default function TripDetails() {
               />
               <div className="day-content">
                 <h3>{d.title || `Day ${i + 1}`}</h3>
-                <p>{d.desc}</p>
+                {Array.isArray(d.activities) ? (
+                  <ul className="trip-day-activities">{d.activities.map((activity) => <li key={activity}>{activity}</li>)}</ul>
+                ) : <p>{d.desc}</p>}
               </div>
             </div>
           ))}
@@ -324,13 +335,23 @@ export default function TripDetails() {
         </div>
       </div>
 
+      {Array.isArray(trip.inclusions) && trip.inclusions.length > 0 && (
+        <div className="trip-includes reveal">
+          <p className="trip-section-kicker">ALL THE ESSENTIALS</p>
+          <h2>What's included</h2>
+          <ul className="trip-includes-list">
+            {trip.inclusions.map((item) => <li key={item}><span aria-hidden="true">✓</span>{item}</li>)}
+          </ul>
+        </div>
+      )}
+
       {/* CTA */}
       <div className="trip-cta reveal">
         <h2>Start Your Journey Today</h2>
         <p>Let’s plan your dream trip to Sri Lanka — tailored just for you.</p>
         <div className="cta-buttons">
-          <button className="btn-outline" onClick={() => navigate("/#packages")}>
-            Back to Home
+          <button className="btn-outline" onClick={() => navigate("/tours")}>
+            Back to packages
           </button>
           <button className="btn-primary" onClick={goToQuote}>
             Request a Quote

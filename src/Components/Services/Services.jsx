@@ -110,6 +110,14 @@ const Icon = ({ name }) => {
           <path d="M13 6l-1 4" />
         </svg>
       );
+    case "guide":
+      return <svg {...common}><circle cx="12" cy="7" r="3" /><path d="M5 21v-2a7 7 0 0 1 14 0v2" /></svg>;
+    case "shield":
+      return <svg {...common}><path d="M12 3l7 3v5c0 4.7-2.8 8-7 10-4.2-2-7-5.3-7-10V6l7-3z" /><path d="M9 12l2 2 4-4" /></svg>;
+    case "calendar":
+      return <svg {...common}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M7 3v4M17 3v4M3 10h18M8 14h3M8 17h6" /></svg>;
+    case "headset":
+      return <svg {...common}><path d="M4 14v-2a8 8 0 0 1 16 0v2" /><rect x="3" y="13" width="4" height="6" rx="2" /><rect x="17" y="13" width="4" height="6" rx="2" /><path d="M17 19c0 1-1 2-3 2h-2" /></svg>;
     default:
       return null;
   }
@@ -117,14 +125,13 @@ const Icon = ({ name }) => {
 
 /* ---- Data ---- */
 const SERVICES = [
-  { icon: "route",  title: "Tailor-Made Itineraries",   desc: "Trips designed around your dates, budget, and travel style — no templates.", tags: ["Custom plan", "Flexible pace"] },
-  { icon: "car",    title: "Private Drivers & Vehicles", desc: "Air-conditioned cars, vans, and SUVs with safe, English-speaking drivers.", tags: ["AC vehicles", "Fuel included"] },
-  { icon: "bed",    title: "Hotel & Villa Bookings",    desc: "Handpicked boutique stays with great locations and warm hospitality.", tags: ["Boutique", "Resorts"] },
-  { icon: "plane",  title: "Airport Transfers",         desc: "Meet-and-greet pick-ups and drops, any time, any airport in Sri Lanka.", tags: ["On time", "Fixed price"] },
-  { icon: "castle", title: "Culture & Heritage Tours",  desc: "Sigiriya, Anuradhapura, Polonnaruwa, Kandy — with licensed guides.", tags: ["UNESCO", "Local guides"] },
-  { icon: "binocs", title: "Wildlife & Safari",         desc: "Yala, Udawalawe, Minneriya elephant gatherings, and whale watching.", tags: ["Park permits", "Trusted jeeps"] },
-  { icon: "train",  title: "Scenic Train & Tea Country", desc: "Reserved seats, misty tea estates, and picture-perfect viewpoints.", tags: ["Ella route", "Photo stops"] },
-  { icon: "beach",  title: "Beaches & Water Sports",    desc: "Bentota, Mirissa, Trinco — surfing, snorkeling, and sunset cruises.", tags: ["Seasonal picks", "Family friendly"] },
+  { icon: "plane", title: "Airport Transfers", desc: "Friendly meet-and-greet service with reliable pickup and drop-off.", tags: [] },
+  { icon: "bed", title: "Handpicked Stays", desc: "Hotels and villas selected for comfort, location and warm hospitality.", tags: [] },
+  { icon: "guide", title: "Expert Local Guides", desc: "Licensed English-speaking guides who bring every destination to life.", tags: [] },
+  { icon: "shield", title: "Safe & Secure", desc: "Insured vehicles and professional drivers for complete peace of mind.", tags: [] },
+  { icon: "route", title: "Custom Itineraries", desc: "Personal routes shaped around your interests, pace and budget.", tags: [] },
+  { icon: "calendar", title: "Easy Booking", desc: "Simple planning, quick replies and clear pricing without surprises.", tags: [] },
+  { icon: "headset", title: "24/7 Support", desc: "Helpful WhatsApp assistance before, during and after your journey.", tags: [] },
 ];
 
 export default function Services({ onQuoteClick }) {
@@ -176,10 +183,9 @@ export default function Services({ onQuoteClick }) {
       <div className="sv-container">
         <header className="sv-head sv-reveal">
           <p className="sv-eyebrow">Our Services</p>
-          <h2 className="sv-title">Everything you need for a smooth Sri Lankan journey</h2>
+          <h2 className="sv-title">Travel Sri Lanka, Made Easy</h2>
           <p className="sv-sub">
-            Pick a curated tour or ask us to craft something from scratch. We handle planning,
-            bookings, transport and on-trip support — you enjoy the holiday.
+            From custom itineraries and trusted drivers to stays and transfers, we take care of the details.
           </p>
         </header>
 
@@ -248,15 +254,7 @@ export default function Services({ onQuoteClick }) {
           </div>
         </div>
 
-        <div className="sv-cta sv-reveal">
-          <a
-            className="sv-btn sv-btn--gold"
-            href="/quote"
-            onClick={(e) => { if (onQuoteClick) { e.preventDefault(); onQuoteClick(); } }}
-          >
-            Get a Free Custom Plan
-          </a>
-        </div>
+        
       </div>
     </section>
   );

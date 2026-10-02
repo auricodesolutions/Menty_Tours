@@ -1,12 +1,12 @@
-import React, { useState, useEffect, Suspense } from "react";
-import { Routes, Route, Navigate, Outlet } from "react-router-dom";
+import React, { useState, useEffect, useRef, Suspense } from "react";
+import { Routes, Route, Navigate, Outlet, useLocation } from "react-router-dom";
 
 /* Layout + sections (public) */
 import Navbar from "./Components/Navbar/Navbar";
 import Footer from "./Components/Footer/Footer";
 import Loader from "./Components/Loader/Loader";
 import Hero from "./Components/Hero/Hero";
-import About from "./Components/About/About";
+import PopularDestinations from "./Components/PopularDestinations/PopularDestinations";
 import Services from "./Components/Services/Services";
 import TourPackages from "./Components/TourPackages/TourPackages";
 import WhyChooseUs from "./Components/WhyChooseUs/WhyChooseUs";
@@ -14,19 +14,19 @@ import OurPartners from "./Components/OurPartners/OurPartners";
 import FutureInspire from "./Components/FutureInspire/FutureInspire";
 import Contact from "./Components/Contact/Contact";
 import Testominals from "./Components/Testominals/Testominals";
-import MemoriesTeaser from "./Components/Memories/MemoriesTeaser";
+import FAQ from "./Components/FAQ/FAQ";
 import OurIsland from "./Components/OurIsland/OurIsland";
-import DestinationsSection from "./Components/DestinationsSection/DestinationsSection";
 import LineDivider from "./Components/LineDivider/LineDivider";
 import FloatingButtons from "./Components/FloatingButtons/FloatingButtons";
 
 /* Pages */
-import MemoriesExplore from "./Pages/MemoriesExplore/MemoriesExplore";
 import AboutSriLanka from "./Pages/AboutSriLanka/AboutSriLanka."; // ✅ fixed (removed trailing dot)
-import QuotePage from "./Pages/QuoteForm/QuoteForm";
+import QuotePage from "./Pages/QuoteForm/QuoteRequestPage";
 import TripDetails from "./Pages/TripDetails/TripDetails";
 import TestominalsPage from "./Pages/TestimonialsPage/TestimonialsPage";
 import ViewAllTours from "./Pages/ViewAllTours/ViewAllTours";
+import WriteReview from "./Pages/WriteReview/WriteReview";
+import AboutUs from "./Pages/AboutUs/AboutUs";
 
 
 /* Admin */
@@ -50,22 +50,16 @@ function HomePage() {
     <>
       <Navbar />
       <Hero />
-      <About />  
-
-      <TourPackages />
-      <LineDivider color="#c9a24b" thickness={3} />
-      <DestinationsSection />
-      <MemoriesTeaser />
-      <Testominals />
-      <LineDivider color="#c9a24b" thickness={3} />
-
-       <OurIsland />
-      <WhyChooseUs />
+      <Services />
+      <PopularDestinations />
+      <OurIsland />
       <FutureInspire />
-       <Services />
-      <LineDivider color="#c9a24b" thickness={3} />
-
       <OurPartners />
+
+      <Testominals />
+      <FAQ />
+
+
       {/* <Contact /> */}
       <FloatingButtons />
     </>
@@ -74,11 +68,72 @@ function HomePage() {
 
 /* Public wrapper with Navbar/Footer */
 function PublicLayout() {
+  const layoutRef = useRef(null);
+  const location = useLocation();
+
+  useEffect(() => {
+    const layout = layoutRef.current;
+    if (!layout || !("IntersectionObserver" in window)) return undefined;
+    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return undefined;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("mt-in-view");
+        observer.unobserve(entry.target);
+      });
+    }, { threshold: 0, rootMargin: "0px 0px -10% 0px" });
+
+    const discover = () => {
+      layout.querySelectorAll("section, main").forEach((element) => {
+        if (element.closest("footer, [role='dialog']") || element.classList.contains("hero")) return;
+        if (element.matches("section") && element.parentElement?.closest("section")) return;
+        if (element.matches("main") && element.querySelector("section")) return;
+        if (element.classList.contains("mt-scroll-reveal")) {
+          if (!element.classList.contains("mt-in-view")) observer.observe(element);
+          return;
+        }
+
+        element.classList.add("mt-scroll-reveal");
+        const bounds = element.getBoundingClientRect();
+        if (bounds.top < window.innerHeight * .9 && bounds.bottom > 0) {
+          element.classList.add("mt-in-view");
+        } else {
+          observer.observe(element);
+        }
+      });
+
+      layout.querySelectorAll("main :is(h1,h2,h3,p,article,figure,img), section :is(h1,h2,h3,p,article,figure,img)").forEach((element) => {
+        if (element.closest("footer, [role='dialog'], .hero, .about-us, .quote-contact, .trip-modern")) return;
+        if (element.parentElement?.closest("article, figure")) return;
+        if (element.classList.contains("mt-content-reveal")) return;
+
+        element.classList.add("mt-content-reveal");
+        const bounds = element.getBoundingClientRect();
+        if (bounds.top < window.innerHeight * .92 && bounds.bottom > 0) {
+          element.classList.add("mt-in-view");
+        } else {
+          observer.observe(element);
+        }
+      });
+      layout.classList.add("mt-motion-ready");
+    };
+
+    discover();
+    const mutationObserver = new MutationObserver(discover);
+    mutationObserver.observe(layout, { childList: true, subtree: true });
+
+    return () => {
+      mutationObserver.disconnect();
+      observer.disconnect();
+    };
+  }, [location.pathname]);
+
   return (
-    <>
+    <div className="public-site" ref={layoutRef}>
       <Outlet />
       <Footer />
-    </>
+    </div>
   );
 }
 
@@ -99,13 +154,16 @@ export default function App() {
           {/* ---------- Public ---------- */}
           <Route element={<PublicLayout />}>
             <Route path="/" element={<HomePage />} />
-            <Route path="/memories" element={<MemoriesExplore />} />
             <Route path="/about-sri-lanka" element={<AboutSriLanka />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/memories" element={<Navigate to="/about-us" replace />} />
             <Route path="/quote" element={<QuotePage />} />
             <Route path="/trip/:id" element={<TripDetails />} />
             <Route path="/testimonials" element={<Testominals />} />
             <Route path="/testimonialsPage" element={<TestominalsPage />} />
+            <Route path="/write-review" element={<WriteReview />} />
             <Route path="/tours" element={<ViewAllTours />} />
+            <Route path="/packages" element={<Navigate to="/tours" replace />} />
 
           </Route>
 

@@ -2,7 +2,7 @@
 .loader {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #fefefe 0%, #e8f0ff 100%);
+  background: linear-gradient(135deg, #fffdf8 0%, #f4efe4 100%);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,7 +46,7 @@
   content: "";
   position: absolute;
   inset: 0;
-  border: 3px solid rgba(13, 71, 161, 0.4);
+  border: 3px solid rgba(218, 166, 43, 0.48);
   border-radius: 50%;
   animation: ripple 1.6s infinite ease-out;
 }
@@ -61,6 +61,7 @@
   height: 65px;
   object-fit: contain;
   border-radius: 50%;
+  background:#fff;
   z-index: 2;
   position: absolute;
   top: 50%;
@@ -70,7 +71,7 @@
 
 /* ===== Text Style ===== */
 .loader-text {
-  color: #0d47a1;
+  color: #0b1d33;
   font-size: 1.1rem;
   font-weight: 500;
   letter-spacing: 0.5px;
