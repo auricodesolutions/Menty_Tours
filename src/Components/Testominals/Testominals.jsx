@@ -1,8 +1,11 @@
+import { API_BASE } from "../../lib/apiConfig";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { UserRound } from "lucide-react";
+import { useSiteContent } from "../../lib/SiteContent";
 import "./Testominals.css";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
+
 const FALLBACK_REVIEWS = [
   { name: "Emma W.", country: "United Kingdom", trip: "Classic Sri Lanka", rating: 5, text: "Every detail felt effortless. Our guide was warm, patient and incredibly knowledgeable, and the journey from Sigiriya to Ella was unforgettable." },
   { name: "Luca B.", country: "Italy", trip: "Beaches & Wildlife", rating: 5, text: "A beautifully planned holiday with a clean vehicle, thoughtful hotel choices and the flexibility to add Yala at the last minute." },
@@ -16,24 +19,65 @@ function Stars({ value = 5 }) {
 }
 
 function PreviewCard({ review, position, onClick }) {
+  const featured = position === "active";
+  const Card = featured ? "article" : "button";
   return (
-    <button type="button" className={`review-card review-card--${position}`} onClick={onClick} aria-label={`${position === "active" ? "Current" : "Show"} review by ${review.name}`}>
-      <span className="review-card__quote" aria-hidden="true">“</span>
-      <Stars value={review.rating} />
-      <p>{review.text}</p>
-      <span className="review-card__person">{review.name}</span>
-      <span className="review-card__meta">{review.country} · {review.trip}</span>
-    </button>
+    <Card type={featured ? undefined : "button"} className={`review-card review-card--${position}`} onClick={featured ? undefined : onClick} aria-label={`${featured ? "Current" : "Show"} review by ${review.name}`}>
+      <span className="review-card__story">
+        <span className="review-card__trip">{review.trip}</span>
+        <span className="review-card__quote" aria-hidden="true">“</span>
+        <span className="review-card__text">{review.text}</span>
+      </span>
+      <span className="review-card__traveler">
+        <span className="review-card__avatar" aria-hidden="true"><UserRound size={30} strokeWidth={1.8} /></span>
+        <Stars value={review.rating} />
+        <span className="review-card__person">{review.name}</span>
+        <span className="review-card__meta">{review.country}</span>
+      </span>
+    </Card>
   );
 }
 
 export default function Testominals() {
+  const { media } = useSiteContent();
+  const reviewsBackground = media("reviewsBackground");
   const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
   const [active, setActive] = useState(0);
   const paused = useRef(false);
   const sectionRef = useRef(null);
   const isVisible = useRef(false);
   const pauseUntil = useRef(0);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return undefined;
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let frame = 0;
+    const updateParallax = () => {
+      frame = 0;
+      if (reducedMotion.matches) {
+        section.style.setProperty("--reviews-parallax", "0px");
+        return;
+      }
+      const bounds = section.getBoundingClientRect();
+      if (bounds.bottom < 0 || bounds.top > window.innerHeight) return;
+      const offset = (window.innerHeight / 2 - bounds.top - bounds.height / 2) * .2;
+      section.style.setProperty("--reviews-parallax", `${Math.max(-80, Math.min(80, offset))}px`);
+    };
+    const scheduleUpdate = () => {
+      if (!frame) frame = window.requestAnimationFrame(updateParallax);
+    };
+    updateParallax();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    reducedMotion.addEventListener("change", scheduleUpdate);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+      reducedMotion.removeEventListener("change", scheduleUpdate);
+    };
+  }, []);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -53,8 +97,9 @@ export default function Testominals() {
     fetch(`${API_BASE}/api/testimonials?limit=12&sort=recent`, { signal: controller.signal })
       .then((response) => response.json())
       .then((json) => {
-        if (json?.ok && Array.isArray(json.data) && json.data.length) {
+        if (json?.ok && Array.isArray(json.data)) {
           setReviews(json.data.map((item) => ({ name: item.name || "Menty Tours guest", country: item.country || "Traveler", trip: item.trip || "Tailor-made tour", rating: Number(item.rating) || 5, text: item.text || "A wonderful Sri Lankan journey with Menty Tours." })));
+          setActive(0);
         }
       }).catch(() => {});
     return () => controller.abort();
@@ -75,10 +120,6 @@ export default function Testominals() {
     pauseUntil.current = Date.now() + 8000;
     setActive(index);
   };
-  const move = (direction) => {
-    pauseUntil.current = Date.now() + 8000;
-    setActive((value) => (value + direction + reviews.length) % reviews.length);
-  };
 
   return (
     <section
@@ -93,18 +134,19 @@ export default function Testominals() {
       }}
       onTouchStart={() => { pauseUntil.current = Date.now() + 8000; }}
     >
+      <div className="reviews-backdrop" aria-hidden="true">
+        {reviewsBackground && <img src={reviewsBackground.url} alt="" loading="lazy" decoding="async" />}
+      </div>
       <div className="reviews-heading">
         <span className="reviews-eyebrow">Guest stories</span>
         <h2>Journeys worth remembering</h2>
         <p>Real experiences from travelers who explored Sri Lanka with Menty Tours.</p>
       </div>
-      <div className="reviews-carousel" aria-live="polite">
-        <button className="reviews-arrow reviews-arrow--left" onClick={() => move(-1)} aria-label="Previous review">←</button>
+      {reviews.length > 0 ? <div className="reviews-carousel" aria-live="polite">
         <PreviewCard review={reviews[visible.previous]} position="side" onClick={() => select(visible.previous)} />
         <PreviewCard key={active} review={reviews[active]} position="active" onClick={() => {}} />
         <PreviewCard review={reviews[visible.next]} position="side" onClick={() => select(visible.next)} />
-        <button className="reviews-arrow reviews-arrow--right" onClick={() => move(1)} aria-label="Next review">→</button>
-      </div>
+      </div> : <p className="reviews-empty">Your journey could inspire the next guest. Share your experience with Menty Tours.</p>}
       <div className="reviews-dots" aria-label="Choose a review">
         {reviews.map((review, index) => <button key={`${review.name}-${index}`} className={index === active ? "is-active" : ""} onClick={() => select(index)} aria-label={`Review ${index + 1}`} aria-current={index === active ? "true" : undefined} />)}
       </div>

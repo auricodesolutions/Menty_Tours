@@ -12,7 +12,7 @@
   font-family: "Playfair Display", serif;
   font-weight: 800;
   font-size: clamp(30px, 4vw, 46px);
-  color: #0f1a2a;
+  color: #202527;
   letter-spacing: -0.02em;
   margin-bottom: 6px;
 }
@@ -24,7 +24,7 @@
 .dest-more {
   display: inline-block;
   margin-top: 10px;
-  color: #caa24a;
+  color: #f0c76a;
   font-weight: 700;
   text-decoration: none;
   transition: all 0.3s ease;

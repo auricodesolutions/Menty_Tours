@@ -46,6 +46,7 @@ export default function Navbar({ forceDark = false }) {
   }, [menuOpen]);
 
   return (
+    <>
     <header className={`navbar ${scrolled || forceDark ? "scrolled" : ""}`}>
       <div className="nav-container">
         {/* Logo */}
@@ -75,9 +76,13 @@ export default function Navbar({ forceDark = false }) {
           className={`hamburger ${menuOpen ? "open" : ""}`}
           onClick={() => setMenuOpen(!menuOpen)}
           aria-label="Toggle menu"
+          aria-expanded={menuOpen}
+          aria-controls="menty-mobile-menu"
         >
           <span></span><span></span><span></span>
         </button>
+      </div>
+    </header>
 
         {/* Overlay */}
         <div
@@ -86,7 +91,7 @@ export default function Navbar({ forceDark = false }) {
         ></div>
 
         {/* Mobile Drawer */}
-        <div className={`mobile-drawer ${menuOpen ? "open" : ""}`}>
+        <div id="menty-mobile-menu" className={`mobile-drawer ${menuOpen ? "open" : ""}`} inert={!menuOpen}>
           <div className="drawer-header">
             <a href="/" className="drawer-logo" onClick={() => setMenuOpen(false)}>
               <img src={logo} alt="" aria-hidden="true" />
@@ -112,7 +117,6 @@ export default function Navbar({ forceDark = false }) {
             </a>
           </nav>
         </div>
-      </div>
-    </header>
+    </>
   );
 }

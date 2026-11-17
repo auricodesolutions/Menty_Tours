@@ -1,0 +1,76 @@
+/* Shared interaction motion. Scroll entrances are owned by PublicLayout;
+   these rules never hide content or change how scrolling is controlled. */
+:root {
+  --mt-motion-ease: cubic-bezier(.22, 1, .36, 1);
+  --mt-motion-fast: 220ms;
+  --mt-motion-medium: 380ms;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .public-site main { animation: mt-page-arrive 420ms ease-out; }
+  .public-site :is(.travel-story, .tm-card, .tp-card, .journey-intro__note,
+    .write-review-form, .quote-contact__form-card, .about-us__values article,
+    .about-us__reasons article, .about-us__journey-steps article) {
+    transition: translate var(--mt-motion-medium) var(--mt-motion-ease),
+      border-color var(--mt-motion-fast) ease,
+      box-shadow var(--mt-motion-medium) ease;
+  }
+  .public-site :is(.travel-story__image img, .partner-logo img, .lanka-place img) {
+    transition: scale 650ms var(--mt-motion-ease), filter 450ms ease;
+  }
+  .public-site :is(.btn, .nav-btn, .sv-btn, .tp-btn, .reviews-button,
+    .about-us__button, .quote-contact__submit, .write-submit,
+    .journey-intro__primary, .journey-intro__secondary, .tm-btn, .mf-plan) {
+    transition: transform var(--mt-motion-fast) var(--mt-motion-ease),
+      color var(--mt-motion-fast) ease, background-color var(--mt-motion-fast) ease,
+      border-color var(--mt-motion-fast) ease, box-shadow var(--mt-motion-medium) ease;
+  }
+  .public-site :is(.mf-links a, .mf-contact a, .quote-contact__info a,
+    .journey-intro__secondary, .tm-link) {
+    transition: color var(--mt-motion-fast) ease, text-decoration-color var(--mt-motion-fast) ease;
+  }
+  .public-site :is(input, textarea, select) {
+    transition: border-color var(--mt-motion-fast) ease, box-shadow var(--mt-motion-fast) ease,
+      background-color var(--mt-motion-fast) ease;
+  }
+  .public-site .lanka-place img { animation: mt-photo-arrive 400ms ease-out; }
+  .public-site .review-card--active { animation: mt-review-arrive 450ms var(--mt-motion-ease); }
+  .public-site .lanka-pin__dot {
+    transition: scale var(--mt-motion-fast) var(--mt-motion-ease),
+      background-color var(--mt-motion-fast) ease, box-shadow var(--mt-motion-fast) ease;
+  }
+  .public-site .lanka-pin.is-active .lanka-pin__dot { scale: 1.15; }
+  .public-site :is(.reviews-dots button, .sv-dot) {
+    transition: width 300ms var(--mt-motion-ease), background-color var(--mt-motion-fast) ease;
+  }
+  @keyframes mt-page-arrive { from { opacity: .8; } to { opacity: 1; } }
+  @keyframes mt-photo-arrive { from { opacity: .45; } to { opacity: 1; } }
+  @keyframes mt-review-arrive { from { opacity: .75; translate: 0 8px; } to { opacity: 1; translate: 0 0; } }
+}
+
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .public-site :is(.travel-story, .tm-card, .tp-card, .journey-intro__note,
+    .about-us__values article, .about-us__reasons article, .about-us__journey-steps article):hover {
+    transform: none;
+    translate: 0 -4px;
+    border-color: rgba(0, 126, 174, .22);
+    box-shadow: 0 18px 40px rgba(32, 37, 39, .09);
+  }
+  .public-site .travel-story:hover .travel-story__image img { scale: 1.035; }
+  .public-site :is(.btn, .sv-btn, .tp-btn, .reviews-button, .about-us__button,
+    .quote-contact__submit, .write-submit, .journey-intro__primary, .tm-btn, .mf-plan):not(:disabled):hover {
+    transform: translateY(-2px);
+  }
+  .public-site .lanka-pin:hover .lanka-pin__dot { scale: 1.2; }
+}
+
+.public-site :is(.btn, .sv-btn, .tp-btn, .reviews-button, .about-us__button,
+  .quote-contact__submit, .write-submit, .journey-intro__primary, .tm-btn, .mf-plan):not(:disabled):active {
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .public-site main, .public-site .review-card--active, .public-site .lanka-place img { animation: none; }
+  .public-site :is(.travel-story, .tm-card, .tp-card, .journey-intro__note,
+    .write-review-form, .quote-contact__form-card, .lanka-pin__dot,
+    .travel-story__image img, .reviews-dots button, .sv-dot) { transition: none; }
+}

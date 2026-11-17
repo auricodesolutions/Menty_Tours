@@ -1,0 +1,59 @@
+/* Public Menty brand: Oswald headings, Inter copy, and the logo palette. */
+:root {
+  --mt-display: "Oswald", Impact, "Arial Narrow", sans-serif;
+  --mt-body: "Inter", "Segoe UI", Arial, sans-serif;
+  --mt-ink: #202527;
+  --mt-ink-soft: #384348;
+  --mt-muted: #606c72;
+  --mt-gold: #946b12;
+  --mt-gold-bright: #f0c76a;
+  --mt-ocean: #007eae;
+  --mt-ivory: #f7f9fa;
+  --mt-border: rgba(32, 37, 39, .13);
+  --gold: #f0c76a;
+  --gold-700: #946b12;
+  --ink: #202527;
+  --ocean: #007eae;
+  --sand: #f7f9fa;
+}
+
+.public-site { font-family: var(--mt-body); color: var(--mt-ink); }
+
+/* Explicit families prevent legacy page styles from restoring serif headings. */
+.public-site :is(h1, h2, h3, h4, h5, h6),
+.public-site :is(.destination-card__content strong, .sv-card__title, .wcu-card__title, .write-review-promise strong) {
+  font-family: var(--mt-display) !important;
+  font-weight: 600 !important;
+  letter-spacing: .015em !important;
+  text-transform: uppercase;
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.public-site :is(p, li, a, button, input, select, textarea, label, small, blockquote, address, summary),
+.public-site :is(.tm-chip, .tm-nameRow, .tm-meta, .review-card__person, .review-card__meta, .hero__subtitle) {
+  font-family: var(--mt-body) !important;
+}
+
+.public-site .hero__title-script {
+  font-family: "Caveat", "Segoe Script", cursive;
+  text-transform: none;
+}
+.public-site .hero__title-main { font-family: var(--mt-display); font-weight: 700; }
+.public-site .hero__title-main em { color: #f0c76a; }
+
+.public-site :is(.sv-icon, .popular-destinations__intro-icon) { color: #007eae; background: #e8f6fb; }
+.public-site :is(.sv-card:hover .sv-icon, .popular-destinations__intro-icon) { background: #007eae; color: #fff; }
+.public-site :is(.tm-write-page-cta, .write-review-promise, .mf-footer) {
+  background: linear-gradient(125deg, #202527, #263c46);
+}
+.public-site :is(.journey-intro__primary, .write-submit, .sv-btn, .mf-plan, .tm-btn:not(.tm-btn--ghost), .reviews-button--primary) {
+  background: #f0c76a !important;
+  color: #202527 !important;
+}
+.public-site :is(.journey-intro__primary, .write-submit, .sv-btn, .mf-plan, .tm-btn:not(.tm-btn--ghost), .reviews-button--primary):hover {
+  background: #f0c76a !important;
+}
+.public-site :is(.journey-intro__secondary, .tm-link, .write-review-intro__copy a) { color: #007eae; }
+.public-site :is(input, textarea, select):focus-visible { outline-color: #007eae; }
+.public-site ::selection { background: #f0c76a; color: #202527; }

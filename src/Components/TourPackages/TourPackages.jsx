@@ -1,3 +1,4 @@
+import { API_BASE } from "../../lib/apiConfig";
 // src/components/TourPackages/TourPackages.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
@@ -5,10 +6,7 @@ import "./TourPackages.css";
 import { viewURL } from "../../lib/adminApi"; // shared URL resolver
 import { FEATURED_PACKAGE } from "../../data/featuredTour";
 
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  "http://localhost:4000";
+
 
 /* icons */
 const Clock = () => (
@@ -212,7 +210,7 @@ export default function TourPackages() {
             tags: cleanUnique(p.tags),
             itinerary: cleanItinerary(p.itinerary),
           }));
-          setData([FEATURED_PACKAGE, ...cleaned.filter((tour) => (tour.id || tour.tourId) !== FEATURED_PACKAGE.id)]);
+          setData(cleaned);
           setError("");
         }
       } catch (e) {

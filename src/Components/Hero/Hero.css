@@ -1,7 +1,7 @@
 :root {
   --white: #fff;
-  --gold: #e4b957;
-  --ink: #0e1a2b;
+  --gold: #f0c76a;
+  --ink: #202527;
   --ease: cubic-bezier(.22, 1, .36, 1);
   --nav-h: 72px;
 }
@@ -88,7 +88,7 @@
   max-width: 100%;
   margin: 0 0 10px;
   padding: 0;
-  color: #f5ce76;
+  color: #f0c76a;
   background: none;
   font-size: .8rem;
   font-weight: 700;

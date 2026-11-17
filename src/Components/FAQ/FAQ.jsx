@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ArrowUpRight, MessageCircleQuestion, Plus } from "lucide-react";
+import { Phone, Mail, MapPin, Plus } from "lucide-react";
 import "./FAQ.css";
 
 const questions = [
@@ -74,12 +74,16 @@ export default function FAQ() {
         </div>
 
         <aside className="faq-contact" aria-labelledby="faq-contact-title">
-          <span className="faq-contact__icon" aria-hidden="true"><MessageCircleQuestion size={31} strokeWidth={1.8} /></span>
           <div>
-            <h3 id="faq-contact-title">Still have questions?</h3>
-            <p>Tell our local team what you have in mind. We’ll help you plan the right Sri Lanka journey.</p>
+            <span className="faq-eyebrow">Get in touch</span>
+            <h3 id="faq-contact-title">Contact Menty Tours</h3>
+            <p>Speak with our local team about your Sri Lanka journey.</p>
           </div>
-          <a className="faq-contact__button" href="/quote">Ask Menty Tours <ArrowUpRight size={18} aria-hidden="true" /></a>
+          <dl className="faq-contact__details">
+            <div><Phone size={21} aria-hidden="true" /><dt>Call or WhatsApp</dt><dd><a href="tel:+94777174175">+94 777 174 175</a><a className="faq-contact__whatsapp" href="https://wa.me/94777174175" target="_blank" rel="noreferrer">Chat on WhatsApp ↗</a></dd></div>
+            <div><Mail size={21} aria-hidden="true" /><dt>Email</dt><dd><a href="mailto:mentytours.sl@gmail.com">mentytours.sl@gmail.com</a></dd></div>
+            <div><MapPin size={21} aria-hidden="true" /><dt>Find us</dt><dd><address>47/9, Thissa Road,<br />Wadduwa, Sri Lanka</address></dd></div>
+          </dl>
         </aside>
       </div>
     </section>

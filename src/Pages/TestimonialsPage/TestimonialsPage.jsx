@@ -1,3 +1,4 @@
+import { API_BASE } from "../../lib/apiConfig";
 // src/components/Testimonials/Testominals.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import "./Testominals.css";
@@ -6,10 +7,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import JourneyIntro from "../../Components/JourneyIntro/JourneyIntro";
 
 /* ===== API base ===== */
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  "http://localhost:4000";
+
 
 /* ===== tiny reveal (re-scan on deps) ===== */
 function useReveal(selector = ".tm-reveal", threshold = 0.16, deps = []) {
@@ -496,14 +494,7 @@ export default function TestimonialsPage({ testimonials = DEFAULT_TESTIMONIALS }
       {/* All reviews */}
       <div id="guest-reviews"><AllReviewsGrid items={data} /></div>
 
-      <section className="tm-write-page-cta tm-reveal">
-        <div>
-          <span>Traveled with Menty Tours?</span>
-          <h2>Share your Sri Lanka story</h2>
-          <p>Your honest experience helps future guests travel with confidence.</p>
-        </div>
-        <a className="tm-btn" href="/write-review">Write a review →</a>
-      </section>
+      
     </main>
     </>
   );

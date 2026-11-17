@@ -8,7 +8,7 @@ export default function JourneyIntro({ review = false }) {
     <section className="journey-intro" aria-labelledby="journey-intro-title">
       <div className="journey-intro__copy">
         <span className="journey-intro__eyebrow">{review ? "Share your journey" : "Guest stories"}</span>
-        <h1 id="journey-intro-title">{review ? <>Your story inspires<br />the next journey.</> : <>Journeys worth<br />sharing.</>}</h1>
+          <h1 id="journey-intro-title">{review ? <>Your story inspires<br /><span>the next journey.</span></> : <>Journeys worth<br /><span>sharing.</span></>}</h1>
         <p>{review ? "Tell us about your Sri Lanka adventure. Your honest feedback helps us improve and gives future guests the confidence to explore." : "Discover Sri Lanka through the experiences of guests who traveled with Menty Tours. Personal journeys, local discoveries, and memories to keep."}</p>
         <div className="journey-intro__actions">
           <a className="journey-intro__primary" href={review ? "#review-form" : "#guest-reviews"}>{review ? "Share my experience" : "Read guest stories"}<ArrowRight size={18} aria-hidden="true" /></a>

@@ -1,13 +1,11 @@
+import { API_BASE } from "../../lib/apiConfig";
 // src/Components/Memories/MemoriesTeaser.jsx
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./MemoriesTeaser.css";
 import { viewURL } from "../../lib/adminApi";
 
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  "http://localhost:4000";
+
 
 function useReveal(selector = ".mem9-reveal", threshold = 0.14) {
   useEffect(() => {

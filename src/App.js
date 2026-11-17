@@ -11,7 +11,7 @@ import Services from "./Components/Services/Services";
 import TourPackages from "./Components/TourPackages/TourPackages";
 import WhyChooseUs from "./Components/WhyChooseUs/WhyChooseUs";
 import OurPartners from "./Components/OurPartners/OurPartners";
-import FutureInspire from "./Components/FutureInspire/FutureInspire";
+import TravelStories from "./Components/TravelStories/TravelStories";
 import Contact from "./Components/Contact/Contact";
 import Testominals from "./Components/Testominals/Testominals";
 import FAQ from "./Components/FAQ/FAQ";
@@ -41,8 +41,17 @@ import TestimonialForm from "./Pages/Admin/TestimonialForm";
 import QuotesList from "./Pages/Admin/QuotesList";
 import QuoteDetail from "./Pages/Admin/QuoteDetail";
 
+import WebsiteMedia from "./Pages/Admin/WebsiteMedia";
+import ContentCollection from "./Pages/Admin/ContentCollection";
+import MediaLibrary from "./Pages/Admin/MediaLibrary";
+import ReviewModeration from "./Pages/Admin/ReviewModeration";
+
 /* Styles */
 import "./App.css";
+import "./brand-theme.css";
+import "./modern-theme.css";
+import "./motion.css";
+import { SiteContentProvider } from "./lib/SiteContent";
 
 /* Public homepage composition */
 function HomePage() {
@@ -52,9 +61,7 @@ function HomePage() {
       <Hero />
       <Services />
       <PopularDestinations />
-      <OurIsland />
-      <FutureInspire />
-      <OurPartners />
+      <TravelStories />
 
       <Testominals />
       <FAQ />
@@ -74,58 +81,53 @@ function PublicLayout() {
   useEffect(() => {
     const layout = layoutRef.current;
     if (!layout || !("IntersectionObserver" in window)) return undefined;
-    if (window.matchMedia?.("(prefers-reduced-motion: reduce)").matches) return undefined;
-
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const seen = new WeakSet();
+    const animations = new Set();
+    let frame = 0;
     const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (!entry.isIntersecting) return;
-        entry.target.classList.add("mt-in-view");
-        observer.unobserve(entry.target);
+      entries.forEach(({ target, isIntersecting }) => {
+        if (!isIntersecting) return;
+        observer.unobserve(target);
+        if (reducedMotion.matches || !target.animate) return;
+        const animation = target.animate([
+          { opacity: .65, translate: "0 18px" },
+          { opacity: 1, translate: "0 0" },
+        ], { duration: 700, easing: "cubic-bezier(.22,1,.36,1)" });
+        animations.add(animation);
+        animation.onfinish = () => animations.delete(animation);
       });
-    }, { threshold: 0, rootMargin: "0px 0px -10% 0px" });
-
+    }, { threshold: 0, rootMargin: "0px 0px -24px 0px" });
     const discover = () => {
-      layout.querySelectorAll("section, main").forEach((element) => {
-        if (element.closest("footer, [role='dialog']") || element.classList.contains("hero")) return;
-        if (element.matches("section") && element.parentElement?.closest("section")) return;
-        if (element.matches("main") && element.querySelector("section")) return;
-        if (element.classList.contains("mt-scroll-reveal")) {
-          if (!element.classList.contains("mt-in-view")) observer.observe(element);
-          return;
-        }
-
-        element.classList.add("mt-scroll-reveal");
-        const bounds = element.getBoundingClientRect();
-        if (bounds.top < window.innerHeight * .9 && bounds.bottom > 0) {
-          element.classList.add("mt-in-view");
-        } else {
-          observer.observe(element);
-        }
-      });
-
-      layout.querySelectorAll("main :is(h1,h2,h3,p,article,figure,img), section :is(h1,h2,h3,p,article,figure,img)").forEach((element) => {
+      layout.querySelectorAll("section, main > header, main > form, main > .tm-all").forEach((element) => {
+        if (seen.has(element)) return;
+        seen.add(element);
         if (element.closest("footer, [role='dialog'], .hero, .about-us, .quote-contact, .trip-modern")) return;
-        if (element.parentElement?.closest("article, figure")) return;
-        if (element.classList.contains("mt-content-reveal")) return;
-
-        element.classList.add("mt-content-reveal");
+        if (element.parentElement?.closest("section")) return;
         const bounds = element.getBoundingClientRect();
-        if (bounds.top < window.innerHeight * .92 && bounds.bottom > 0) {
-          element.classList.add("mt-in-view");
-        } else {
-          observer.observe(element);
-        }
+        // Already-visible content and asynchronous carousel updates never replay.
+        if (bounds.top < window.innerHeight || reducedMotion.matches) return;
+        observer.observe(element);
       });
-      layout.classList.add("mt-motion-ready");
     };
-
     discover();
-    const mutationObserver = new MutationObserver(discover);
-    mutationObserver.observe(layout, { childList: true, subtree: true });
-
+    const mutations = new MutationObserver(() => {
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => { frame = 0; discover(); });
+    });
+    mutations.observe(layout, { childList: true, subtree: true });
+    const stopMotion = () => {
+      if (!reducedMotion.matches) return;
+      animations.forEach((animation) => animation.cancel());
+      animations.clear();
+    };
+    reducedMotion.addEventListener("change", stopMotion);
     return () => {
-      mutationObserver.disconnect();
+      mutations.disconnect();
       observer.disconnect();
+      window.cancelAnimationFrame(frame);
+      reducedMotion.removeEventListener("change", stopMotion);
+      animations.forEach((animation) => animation.cancel());
     };
   }, [location.pathname]);
 
@@ -138,17 +140,45 @@ function PublicLayout() {
 }
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const { pathname } = useLocation();
+  const [loading, setLoading] = useState(() => !pathname.startsWith("/admin"));
+  const [loaderExiting, setLoaderExiting] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 3000);
-    return () => clearTimeout(t);
+    const started = performance.now();
+    let revealTimer;
+    let exitTimer;
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      revealTimer = window.setTimeout(() => {
+        setLoaderExiting(true);
+        exitTimer = window.setTimeout(() => setLoading(false), 430);
+      }, Math.max(0, 1200 - (performance.now() - started)));
+    };
+    if (document.readyState === "complete") finish();
+    else window.addEventListener("load", finish, { once: true });
+    const fallback = window.setTimeout(finish, 4500);
+    return () => {
+      window.removeEventListener("load", finish);
+      window.clearTimeout(fallback);
+      window.clearTimeout(revealTimer);
+      window.clearTimeout(exitTimer);
+    };
   }, []);
+
+  useEffect(() => {
+    if (!loading) return undefined;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = previousOverflow; };
+  }, [loading]);
 
   return (
     <>
-      {/* {loading && <Loader />} */}
-
+      {loading && <Loader exiting={loaderExiting} />}
+      <SiteContentProvider>
       <Suspense fallback={<div style={{ padding: 24 }}>Loading…</div>}>
         <Routes>
           {/* ---------- Public ---------- */}
@@ -173,12 +203,17 @@ export default function App() {
 
           {/* Protected admin area (guard runs inside AdminLayout) */}
           <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<Navigate to="tours" replace />} />
+            <Route index element={<Navigate to="/admin/media" replace />} />
+            <Route path="media" element={<WebsiteMedia />} />
+            <Route path="destinations" element={<ContentCollection key="destinations" kind="destinations" />} />
+            <Route path="stories" element={<ContentCollection key="stories" kind="stories" />} />
+            <Route path="library" element={<MediaLibrary />} />
+            <Route path="reviews" element={<ReviewModeration />} />
 
             {/* Use relative child paths here */}
-            <Route path="tours" element={<ToursList />} />
-            <Route path="tours/new" element={<TourForm />} />
-            <Route path="tours/:key" element={<TourForm />} />
+            <Route path="tours" element={<ContentCollection key="tours" kind="tours" />} />
+            <Route path="tours/new" element={<Navigate to="/admin/tours" replace />} />
+            <Route path="tours/:key" element={<Navigate to="/admin/tours" replace />} />
 
             <Route path="memories" element={<MemoriesList />} />
             <Route path="memories/new" element={<MemoryForm />} />
@@ -195,6 +230,7 @@ export default function App() {
           <Route path="*" element={<div style={{ padding: 24 }}>404 — Not found</div>} />
         </Routes>
       </Suspense>
+      </SiteContentProvider>
     </>
   );
 }

@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Navbar from "../../Components/Navbar/Navbar";
 import SEO from "../../Components/Seo/SEO";
-import sigiriya from "../../assets/Sigiriya.jpg";
+import { useSiteContent } from "../../lib/SiteContent";
 import "./QuoteRequestPage.css";
 
 const WHATSAPP_NUMBER = "94777174175";
@@ -25,6 +25,8 @@ function makeWhatsAppMessage(form) {
 }
 
 export default function QuoteRequestPage() {
+  const { media } = useSiteContent();
+  const contactHero = media("contactHero");
   const pageRef = useRef(null);
   const location = useLocation();
   const [searchParams] = useSearchParams();
@@ -79,7 +81,7 @@ export default function QuoteRequestPage() {
       />
       <main className="quote-contact" ref={pageRef}>
         <header className="quote-contact__hero">
-          <img src={sigiriya} alt="Sigiriya Rock Fortress in Sri Lanka" loading="eager" />
+          {contactHero && <img src={contactHero.url} alt={contactHero.alt} loading="eager" />}
           <div className="quote-contact__hero-shade" />
           <div className="quote-contact__hero-content" data-quote-reveal>
             <span>PLAN YOUR SRI LANKA JOURNEY</span>

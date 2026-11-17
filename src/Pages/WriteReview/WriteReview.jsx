@@ -1,9 +1,10 @@
+import { API_BASE } from "../../lib/apiConfig";
 import React, { useEffect, useState } from "react";
 import JourneyIntro from "../../Components/JourneyIntro/JourneyIntro";
 import Navbar from "../../Components/Navbar/Navbar";
 import "./WriteReview.css";
 
-const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:4000";
+
 const SATISFACTION_OPTIONS = [
   { value: 1, face: "😞", label: "Very dissatisfied" },
   { value: 2, face: "🙁", label: "Dissatisfied" },

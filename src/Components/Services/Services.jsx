@@ -149,7 +149,13 @@ export default function Services({ onQuoteClick }) {
     if (!s.length) return;
     const target = s[clamp(i, 0, s.length - 1)];
     if (target) {
-      target.scrollIntoView({ behavior: "smooth", inline: "start", block: "nearest" });
+      const track = trackRef.current;
+      let left = Math.min(target.offsetLeft - s[0].offsetLeft, track.scrollWidth - track.clientWidth);
+      if (i < idx && left >= track.scrollLeft - 2) {
+        const previousPositions = s.map((slide) => slide.offsetLeft - s[0].offsetLeft).filter((position) => position < track.scrollLeft - 2);
+        left = previousPositions[previousPositions.length - 1] ?? 0;
+      }
+      track.scrollTo({ left, behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
       setIdx(Array.from(s).indexOf(target));
     }
   };
@@ -159,12 +165,16 @@ export default function Services({ onQuoteClick }) {
     if (!el) return;
     const s = slides();
     if (!s.length) return;
+    if (el.scrollWidth > el.clientWidth && el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) {
+      setIdx(s.length - 1);
+      return;
+    }
 
     // Find the slide whose left edge is closest to the current scrollLeft
     let closest = 0;
     let minDist = Infinity;
     for (let i = 0; i < s.length; i++) {
-      const dist = Math.abs(s[i].offsetLeft - el.scrollLeft);
+      const dist = Math.abs(s[i].offsetLeft - s[0].offsetLeft - el.scrollLeft);
       if (dist < minDist) { minDist = dist; closest = i; }
     }
     setIdx(closest);

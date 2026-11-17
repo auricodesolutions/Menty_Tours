@@ -3,8 +3,7 @@ import { Link } from "react-router-dom";
 import { CarFront, Compass, MessageCircleMore, Route } from "lucide-react";
 import Navbar from "../../Components/Navbar/Navbar";
 import SEO from "../../Components/Seo/SEO";
-import boatWelcome from "../../assets/Memories/Memories-with torism couple (2).jpeg";
-import mangroveJourney from "../../assets/Memories/Memories-with torism couple (3).jpeg";
+import { useSiteContent } from "../../lib/SiteContent";
 import boatSelfie from "../../assets/Memories/Memories-with torism couple (4).jpeg";
 import wildlifeMoment from "../../assets/Memories/Memories-with torism couple (5).jpeg";
 import fishSpa from "../../assets/Memories/Memories-with torism couple (7).jpeg";
@@ -24,6 +23,9 @@ const reasons = [
 ];
 
 export default function AboutUs() {
+  const { media } = useSiteContent();
+  const mainImage = media("aboutMain");
+  const secondaryImage = media("aboutSecondary");
   const pageRef = useRef(null);
 
   useEffect(() => {
@@ -64,13 +66,13 @@ export default function AboutUs() {
             </div>
           </div>
           <div className="about-us__hero-photos" data-reveal>
-            <figure className="about-us__photo about-us__photo--main">
-              <img src={boatWelcome} alt="Guests and local host smiling together during a boat trip" loading="eager" />
+            {mainImage && <figure className="about-us__photo about-us__photo--main">
+              {mainImage && <img src={mainImage.url} alt={mainImage.alt} loading="eager" />}
               <figcaption>Real moments, shared together.</figcaption>
-            </figure>
-            <figure className="about-us__photo about-us__photo--small">
-              <img src={mangroveJourney} alt="Guests travelling by boat through Sri Lankan mangroves" loading="eager" />
-            </figure>
+            </figure>}
+            {secondaryImage && <figure className="about-us__photo about-us__photo--small">
+              {secondaryImage && <img src={secondaryImage.url} alt={secondaryImage.alt} loading="eager" />}
+            </figure>}
           </div>
         </section>
 

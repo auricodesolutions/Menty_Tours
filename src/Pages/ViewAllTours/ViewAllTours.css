@@ -149,9 +149,9 @@
 }
 
 /* Catalogue layout: the featured package fills the space without obscuring content. */
-.vt { --vt-bg: #f8f6f0; --vt-ink: #112739; }
+.vt { --vt-bg: #f7f9fa; --vt-ink: #202527; }
 .vt-page-intro { width: min(1160px, calc(100% - 48px)); margin: 24px auto 0; text-align: center; }
-.vt-page-intro h1 { margin: 0; color: #112739; font-family: Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; }
+.vt-page-intro h1 { margin: 0; color: #202527; font-family: Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.5rem); line-height: 1.1; }
 .vt-page-intro p { margin: 7px 0 0; color: #65737b; font-size: .96rem; }
 .vt-topbar {
   position: relative;
@@ -160,7 +160,7 @@
   grid-template-columns: auto minmax(0, 1fr) auto;
   gap: 24px;
   padding: 26px max(24px, calc((100% - 1160px) / 2));
-  background: #fffdf9;
+  background: #ffffff;
   backdrop-filter: none;
 }
 .vt-back { border-radius: 8px; min-height: 42px; padding: 8px 14px; }
@@ -204,7 +204,7 @@
   border-radius: 8px;
   border: 0;
   background: #fff;
-  color: #112739;
+  color: #202527;
   font-size: .78rem;
 }
 .vt-price-seal {

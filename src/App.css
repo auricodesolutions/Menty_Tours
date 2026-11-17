@@ -5,16 +5,16 @@
   --container: 1200px;
   --space: clamp(14px, 2.8vw, 24px);
   --page-bg: #fff; /* ← change to your true site background if needed */
-  --mt-ink: #0b1d33;
-  --mt-ink-soft: #26394a;
-  --mt-muted: #64717d;
-  --mt-gold: #b77a19;
-  --mt-gold-bright: #e0ac31;
-  --mt-ocean: #078dbb;
-  --mt-ivory: #f8f5ed;
+  --mt-ink: #202527;
+  --mt-ink-soft: #384348;
+  --mt-muted: #606c72;
+  --mt-gold: #946b12;
+  --mt-gold-bright: #f0c76a;
+  --mt-ocean: #007eae;
+  --mt-ivory: #f7f9fa;
   --mt-white: #ffffff;
   --mt-border: rgba(11, 29, 51, .12);
-  --mt-display: Georgia, Cambria, "Times New Roman", serif;
+  --mt-display: "Oswald", Impact, "Arial Narrow", sans-serif;
   --mt-body: Inter, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   --mt-section-space: clamp(72px, 8.5vw, 120px);
   --mt-section-title: clamp(2.65rem, 5vw, 4.75rem);
@@ -250,7 +250,7 @@ pre, code, table { max-width: 100%; overflow: auto; }
 
 :where(.sv-btn--gold,.tp-btn--gold,.reviews-button--primary,.mf-plan){
   color:var(--mt-ink);
-  background:linear-gradient(135deg,#f1ca6a,var(--mt-gold-bright));
+  background:linear-gradient(135deg,#f0c76a,var(--mt-gold-bright));
 }
 
 :where(.destination-card,.sv-card,.island-card,.tp-card,.review-card,.partners-shell){
@@ -308,7 +308,7 @@ pre, code, table { max-width: 100%; overflow: auto; }
   .divider-btn,.q2-btn,.tm-btn,.write-submit,.asla-btn,.aboutx__btn,
   .wcu-btn,.te-btn,.btn-primary,.btn-outline,.popular-destinations__link,
   .tp-chip,.vt-chip
-):focus-visible { outline: 3px solid #e9b84f; outline-offset: 3px; }
+):focus-visible { outline: 3px solid #f0c76a; outline-offset: 3px; }
 
 .public-site :is(button,.btn,.tp-btn,.q2-btn,.tm-btn):disabled {
   cursor: not-allowed;
@@ -340,27 +340,15 @@ pre, code, table { max-width: 100%; overflow: auto; }
   .public-site .reviews-arrow { justify-self: center; }
 }
 
-/* Entrance effects must never be a prerequisite for reading the page. */
-.public-site .mt-scroll-reveal,
-.public-site .mt-content-reveal { opacity: 1; }
-
-/* Lightweight shared motion for public-page copy and cards. Individual pages with
-   bespoke motion (About, Quote and Trip Details) keep their own timing. */
+/* Section entrances are controlled by PublicLayout. Content remains readable
+   before observation, without JavaScript, and when reduced motion is enabled. */
+.public-site :is(.sv-reveal, .sv-reveal.show, .tm-reveal, .tm-reveal.show,
+  .partners-shell, .partners-grid li, .island-reveal, .island-reveal.show) {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
 @media (prefers-reduced-motion: no-preference) {
-  .public-site .mt-scroll-reveal.mt-in-view {
-    animation: mt-section-enter .7s cubic-bezier(.22,1,.36,1) both;
-  }
-  .public-site.mt-motion-ready .mt-content-reveal.mt-in-view {
-    animation: mt-content-enter .7s cubic-bezier(.22,1,.36,1) both;
-  }
-  @keyframes mt-section-enter {
-    from { opacity: .78; translate: 0 12px; }
-    to { opacity: 1; translate: 0 0; }
-  }
-  @keyframes mt-content-enter {
-    from { opacity: .72; translate: 0 10px; }
-    to { opacity: 1; translate: 0 0; }
-  }
   .public-site :is(.destination-card,.tp-card,.sv-card,.review-card,.island-card,.about-us__gallery figure) img {
     transition: transform .55s ease, scale .55s ease, filter .55s ease;
   }

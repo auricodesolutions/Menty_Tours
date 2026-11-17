@@ -1,3 +1,4 @@
+import { API_BASE } from "../../lib/apiConfig";
 // src/Pages/ViewAllTours/ViewAllTours.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
@@ -8,10 +9,7 @@ import Navbar from "../../Components/Navbar/Navbar";
 import { FEATURED_PACKAGE } from "../../data/featuredTour";
 
 /* ===== API base ===== */
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  "http://localhost:4000";
+
 
 /* ===== Icons ===== */
 const Clock = () => (
@@ -196,7 +194,7 @@ export default function ViewAllTours() {
             itinerary: cleanItinerary(p.itinerary),
           }));
           setErr("");
-          setData([FEATURED_PACKAGE, ...cleaned.filter((tour) => (tour.id || tour.tourId) !== FEATURED_PACKAGE.id)]);
+          setData(cleaned);
         }
       } catch (e) {
         if (alive && e.name !== "AbortError") {

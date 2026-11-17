@@ -1,3 +1,4 @@
+import { API_BASE } from "../../lib/apiConfig";
 // src/Pages/TripDetails/TripDetails.jsx
 import React, { useEffect, useMemo, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -6,12 +7,10 @@ import { Landmark, Plane, Car, Sun } from "lucide-react";
 import { viewURL } from "../../lib/adminApi";
 import SEO from "../../Components/Seo/SEO.jsx";
 import { FEATURED_PACKAGE } from "../../data/featuredTour";
+import { useSiteContent } from "../../lib/SiteContent";
 
 // --- API base (Vite or CRA env); fallback to backend port ---
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  "http://localhost:4000";
+
 
 const FALLBACK_IMG =
   "data:image/svg+xml;utf8," +
@@ -46,6 +45,7 @@ const parsePrice = (val) => {
 };
 
 export default function TripDetails() {
+  const { collections, versions, loading: contentLoading } = useSiteContent();
   const { id } = useParams(); // slug or numeric id
   const navigate = useNavigate();
 
@@ -54,6 +54,15 @@ export default function TripDetails() {
   const [err, setErr] = useState("");
 
   useEffect(() => {
+    if (contentLoading) return undefined;
+    if (versions.tours !== undefined) {
+      const managedTrip = collections.tours.find((tour) => tour.id === id);
+      setTrip(managedTrip || null);
+      setErr(managedTrip ? "" : "This package is no longer available.");
+      setLoading(false);
+      window.scrollTo(0, 0);
+      return undefined;
+    }
     if (id === FEATURED_PACKAGE.id) {
       setTrip(FEATURED_PACKAGE);
       setLoading(false);
@@ -99,7 +108,7 @@ export default function TripDetails() {
 
     window.scrollTo(0, 0);
     return () => { alive = false; ctrl.abort(); };
-  }, [id]);
+  }, [id, contentLoading, versions.tours, collections.tours]);
 
   // simple reveal
   useEffect(() => {
@@ -318,7 +327,7 @@ export default function TripDetails() {
               />
               <div className="day-content">
                 <h3>{d.title || `Day ${i + 1}`}</h3>
-                {Array.isArray(d.activities) ? (
+                {Array.isArray(d.activities) && d.activities.length > 0 ? (
                   <ul className="trip-day-activities">{d.activities.map((activity) => <li key={activity}>{activity}</li>)}</ul>
                 ) : <p>{d.desc}</p>}
               </div>

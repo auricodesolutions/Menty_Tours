@@ -33,7 +33,7 @@
   transform: translateY(-4px);
   box-shadow: 0 14px 30px rgba(6, 28, 43, .25);
 }
-.floating-btn:focus-visible { outline: 3px solid #e9b84f; outline-offset: 3px; }
+.floating-btn:focus-visible { outline: 3px solid #f0c76a; outline-offset: 3px; }
 
 .floating-btn__label {
   position: absolute;

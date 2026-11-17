@@ -1,3 +1,4 @@
+import { API_BASE } from "../../lib/apiConfig";
 // src/components/QuoteForm/QuoteForm.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useSearchParams } from "react-router-dom";
@@ -6,10 +7,7 @@ import sriLankaImg from "../../assets/image2.png";
 import SEO from "../../Components/Seo/SEO.jsx";
 
 /* ===== API base ===== */
-const API_BASE =
-  (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) ||
-  process.env.REACT_APP_API_URL ||
-  "http://localhost:4000";
+
 
 /* ---- tiny inline icons ---- */
 const Icon = {

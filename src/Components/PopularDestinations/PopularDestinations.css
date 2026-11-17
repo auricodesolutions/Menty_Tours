@@ -1,7 +1,7 @@
 .popular-destinations {
   position: relative;
   padding: clamp(64px, 8vw, 108px) 0;
-  color: #0e1a2b;
+  color: #202527;
   background:
     radial-gradient(circle at 7% 18%, rgba(218,174,72,.12), transparent 27%),
     #f7f6f2;
@@ -64,7 +64,7 @@
   align-items: center;
   gap: 6px;
   margin-top: 24px;
-  color: #0e1a2b;
+  color: #202527;
   font-size: .88rem;
   font-weight: 750;
   text-decoration: none;
@@ -86,7 +86,7 @@
   place-items: center;
   border: 1px solid rgba(14,26,43,.18);
   border-radius: 50%;
-  color: #0e1a2b;
+  color: #202527;
   background: transparent;
   cursor: pointer;
   transition: color .25s ease, background .25s ease, border-color .25s ease, transform .25s ease;
@@ -183,7 +183,7 @@
 
 .destination-card__content > span {
   margin-top: 4px;
-  color: #f0ca72;
+  color: #f0c76a;
   font-size: .78rem;
   font-weight: 700;
   letter-spacing: .04em;
@@ -203,7 +203,7 @@
 .destination-card:hover .destination-card__arrow,
 .destination-card:focus-visible .destination-card__arrow {
   color: #10283b;
-  background: #efc665;
+  background: #f0c76a;
   transform: rotate(45deg);
 }
 

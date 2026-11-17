@@ -1,17 +1,16 @@
 // -------------------------------------------
 // Base URL handling (works with or without proxy)
 // -------------------------------------------
-const RAW_BASE = (process.env.REACT_APP_API_BASE || "").trim();
-const BASE = RAW_BASE.replace(/\/+$/, "");
+import { API_BASE as BASE } from "./apiConfig";
 
 // -------------------------------------------
 // Token storage (used only when API returns a JWT)
 // -------------------------------------------
 const tokenKey = "menty_admin_token";
 export const AdminToken = {
-  get: () => localStorage.getItem(tokenKey),
-  set: (t) => localStorage.setItem(tokenKey, t),
-  clear: () => localStorage.removeItem(tokenKey),
+  get: () => sessionStorage.getItem(tokenKey),
+  set: (t) => sessionStorage.setItem(tokenKey, t),
+  clear: () => { sessionStorage.removeItem(tokenKey); localStorage.removeItem(tokenKey); },
 };
 
 // -------------------------------------------
@@ -35,7 +34,7 @@ async function req(path, { method = "GET", json, auth = false, formData } = {}) 
     if (t) headers.Authorization = `Bearer ${t}`;
   }
 
-  const init = { method, headers, credentials: "include", mode: "cors" };
+  const init = { method, headers, credentials: "omit", mode: "cors" };
   if (formData) init.body = formData;
   else if (json != null) init.body = JSON.stringify(json);
 
@@ -58,6 +57,7 @@ async function req(path, { method = "GET", json, auth = false, formData } = {}) 
     const err = new Error(msg);
     err.status = res.status;
     err.data = data;
+    if (res.status === 401 && auth) { AdminToken.clear(); window.dispatchEvent(new Event("menty-session-expired")); }
     throw err;
   }
   return data;
@@ -68,10 +68,9 @@ async function req(path, { method = "GET", json, auth = false, formData } = {}) 
 // -------------------------------------------
 export const viewURL = (p) => {
   if (!p) return "";
-  if (/^https?:\/\//i.test(p)) return p; // absolute passes through
+  if (/^https?:\/\//i.test(p) || /^\/(static|assets|images)\//.test(p)) return p;
   const clean = String(p).replace(/^\/?(api\/uploads\/|uploads\/)/i, "");
-  const prefix = BASE ? "/uploads/" : "/api/uploads/";
-  return `${BASE}${prefix}${clean}`;
+  return `${BASE}/uploads/${clean}`;
 };
 
 // -------------------------------------------
