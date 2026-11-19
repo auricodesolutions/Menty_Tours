@@ -6,12 +6,7 @@ import { useSiteContent } from "../../lib/SiteContent";
 import "./Testominals.css";
 
 
-const FALLBACK_REVIEWS = [
-  { name: "Emma W.", country: "United Kingdom", trip: "Classic Sri Lanka", rating: 5, text: "Every detail felt effortless. Our guide was warm, patient and incredibly knowledgeable, and the journey from Sigiriya to Ella was unforgettable." },
-  { name: "Luca B.", country: "Italy", trip: "Beaches & Wildlife", rating: 5, text: "A beautifully planned holiday with a clean vehicle, thoughtful hotel choices and the flexibility to add Yala at the last minute." },
-  { name: "Sofia M.", country: "Spain", trip: "Sri Lanka Highlights", rating: 5, text: "Menty Tours made us feel looked after from the airport welcome to our final beach stay. Professional, friendly and genuinely personal." },
-  { name: "Daniel K.", country: "Germany", trip: "Hill Country Escape", rating: 5, text: "The route was perfectly paced and our driver always knew the best viewpoints and local stops. We would travel with Menty again." },
-];
+
 
 function Stars({ value = 5 }) {
   const rating = Math.max(0, Math.min(5, Math.round(Number(value) || 0)));
@@ -41,7 +36,7 @@ function PreviewCard({ review, position, onClick }) {
 export default function Testominals() {
   const { media } = useSiteContent();
   const reviewsBackground = media("reviewsBackground");
-  const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
+  const [reviews, setReviews] = useState([]);
   const [active, setActive] = useState(0);
   const paused = useRef(false);
   const sectionRef = useRef(null);
@@ -94,7 +89,7 @@ export default function Testominals() {
 
   useEffect(() => {
     const controller = new AbortController();
-    fetch(`${API_BASE}/api/testimonials?limit=12&sort=recent`, { signal: controller.signal })
+    const loadReviews = () => fetch(`${API_BASE}/api/testimonials?limit=12&sort=recent`, { signal: controller.signal, cache: "no-store" })
       .then((response) => response.json())
       .then((json) => {
         if (json?.ok && Array.isArray(json.data)) {
@@ -102,7 +97,9 @@ export default function Testominals() {
           setActive(0);
         }
       }).catch(() => {});
-    return () => controller.abort();
+    loadReviews();
+    window.addEventListener("focus", loadReviews);
+    return () => { controller.abort(); window.removeEventListener("focus", loadReviews); };
   }, []);
 
   useEffect(() => {
@@ -143,9 +140,9 @@ export default function Testominals() {
         <p>Real experiences from travelers who explored Sri Lanka with Menty Tours.</p>
       </div>
       {reviews.length > 0 ? <div className="reviews-carousel" aria-live="polite">
-        <PreviewCard review={reviews[visible.previous]} position="side" onClick={() => select(visible.previous)} />
+        {reviews.length > 2 && <PreviewCard review={reviews[visible.previous]} position="side" onClick={() => select(visible.previous)} />}
         <PreviewCard key={active} review={reviews[active]} position="active" onClick={() => {}} />
-        <PreviewCard review={reviews[visible.next]} position="side" onClick={() => select(visible.next)} />
+        {reviews.length > 1 && <PreviewCard review={reviews[visible.next]} position="side" onClick={() => select(visible.next)} />}
       </div> : <p className="reviews-empty">Your journey could inspire the next guest. Share your experience with Menty Tours.</p>}
       <div className="reviews-dots" aria-label="Choose a review">
         {reviews.map((review, index) => <button key={`${review.name}-${index}`} className={index === active ? "is-active" : ""} onClick={() => select(index)} aria-label={`Review ${index + 1}`} aria-current={index === active ? "true" : undefined} />)}
